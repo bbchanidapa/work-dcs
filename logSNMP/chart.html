@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+		<meta charset="utf-8" />
+		<title>Chart.js demo</title>
+		<!-- import plugin script -->
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js'></script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/excanvas.js'></script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
+		
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+	<!-- 	<link rel="stylesheet" href="/resources/demos/style.css"> -->
+		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+		<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+		<!-- <link rel="stylesheet" type="text/css" href="dist/style.css"> -->
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js'></script>
+		<!-- <script language="javascript" type="text/javascript" src="dist/excanvas.js"></script> -->
+		<!-- <script language="javascript" type="text/javascript" src="dist/jquery.min.js"></script> -->
+
+	<!-- <link rel="stylesheet" type="text/css" href="jquery.jqplot.css" /> -->
+			<script type="text/javascript">
+			$(document).ready(function(){
+				// For a pie chart
+			var myPieChart = new Chart(ctx,{
+			    type: 'pie',
+			    data: data,
+			    options: options
+			});
+			var data = {
+			    labels: [
+			        "Red",
+			        "Blue",
+			        "Yellow"
+			    ],
+			    datasets: [
+			        {
+			            data: [300, 50, 100],
+			            backgroundColor: [
+			                "#FF6384",
+			                "#36A2EB",
+			                "#FFCE56"
+			            ],
+			            hoverBackgroundColor: [
+			                "#FF6384",
+			                "#36A2EB",
+			                "#FFCE56"
+			            ]
+			        }]
+			};
+
+			
+		
+
+			});
+		</script>
+    </head>
+<body>
+    <!-- line chart canvas element -->
+    <canvas id="buyers" width="600" height="400"></canvas>
+    <!-- pie chart canvas element -->
+    <canvas id="countries" width="600" height="400"></canvas>
+    <!-- bar chart canvas element -->
+    <canvas id="income" width="600" height="400"></canvas>
+</body>
+</html>

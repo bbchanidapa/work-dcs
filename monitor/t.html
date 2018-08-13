@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta name="name" content="content">
+	<script src="//code.jquery.com/jquery-1.9.1.js"></script>
+	<script>
+	$(document).ready(function(){
+	    $("#hide").click(function(){
+	    	var but = $("button")
+	        but.attr('disabled','disabled');
+	        but.html("กำลังดำเนินการ")
+	    });
+
+	});
+	</script>
+</head>
+<body>
+<button id="hide" type="button" >Send</button>
+</body>
+</html>

@@ -1,0 +1,437 @@
+<html>
+<head>
+	<title>Dashboard</title>
+	<meta charset="UTF-8">
+	<!-- script jquery -->
+	<script src="//code.jquery.com/jquery.min.js"></script>
+	<!-- Compiled and minified CSS -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
+	<!-- Compiled and minified JavaScript -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
+	<!--Import Google Icon Font-->
+	<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<!-- import plugin script -->
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js'></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/excanvas.js'></script>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+	<!--Let browser know website is optimized for mobile-->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
+<!-- <script src="../include/confic.js" id="confic"></script> -->
+	<style>
+		html { font-family: GillSans, Calibri, Trebuchet, sans-serif;}  
+		.parallax-container {
+		height: "your height here";	
+	    }
+	    #top{
+			height: 50px;		
+		}
+		#left{
+			height: 500px;		
+		}
+		#center{
+			position:relative;
+			height: 500px;		
+		}
+		#right-top{
+			position:relative;
+			height: 500px;		
+		}
+		#right-down{
+			position:relative;
+			height: 150px;		
+		}
+		#trafficeSw4503{
+			position:relative;
+			width: 100%;		
+		}
+		#countries{
+			position:relative;
+			width: 100%;
+		} 
+		.ilike-blue-container {
+			@extend .blue-text, .text-lighten-4;
+		}
+		.ilike-blue-container {
+			@extend .blue, .lighten-4;
+		}
+		.chart{
+		  vertical-align: middle;
+		  width: 100%;
+		  margin: 0 auto; 
+		  position: relative;
+		  display: inline-block;
+
+		}
+		/* p {
+		  text-align: center;
+		  font-family:'Verdana', sans-serif;
+		  font-size: 10px;
+		} */
+		#inbound{
+			position:relative;
+			background: rgba(54,162,235,1);
+		}
+		#outbound{
+			position:relative;
+			background: rgba(255,161,181,1);
+		}
+		#div-all{
+			border: 0px solid #FFFFFF;
+		}
+		#ratio-txt{
+			border: 0px solid #FFFFFF;
+		}
+		#ul-bel{
+			border: 0px solid #FFFFFF;
+		}
+		#net-traff-txt{
+			border: 0px solid #FFFFFF;
+		}
+		#txt-ratio{
+			border: 0px solid #FFFFFF;
+			padding: 0;
+			width: 75px;
+		}
+		.collection txt-ratio{
+			border: 0px solid #FFFFFF;
+		}
+		body{
+		    background-color: #f5f5f5;
+		}
+		.collection.txt-ratio{
+			width: 80px;
+		}
+
+      
+	</style>
+	<script>
+
+//-----------------------------------Document-------------------------------------------	
+		$(document).ready(function(){
+			$('.parallax').parallax();
+			$('.collapsible').collapsible({
+				accordion : false 
+			});
+			$('.button-collapse').sideNav({
+				menuWidth: 500, 
+				edge: 'right',
+				closeOnClick: true 
+			});  
+
+//-----------------------------------Ajax data-------------------------------------------
+			var url ="https://sheetsu.com/apis/v1.0/feb4c5bd6a70?fields=time,traffic_ratio,traffic_sw4503";
+			function get(){
+			    return $.ajax({ 
+			        type: 'GET', 
+			        url: url,
+			        async: false,
+					success:function(data){
+						console.log('Get Ajax Success')
+					}
+			    });
+			}
+			var data  = get();
+			var obj   = jQuery.parseJSON(data['responseText']);
+			var count = 12;
+			var avgIn = 0;
+			var avgOut= 0;
+			var ratio = '';
+			var start = obj.length-13;
+			var label    = [],
+				inbound  = [],
+				outbound = [];
+
+			sendData();
+			function sendData(){
+				if(count > 0){
+					start+=1
+					label.push(obj[start]['time'].substr(0,5));
+					var sw4503 = jQuery.parseJSON(obj[start]['traffic_sw4503'])
+					inbound.push(sw4503['inbound']);
+					outbound.push(sw4503['outbound']);	
+					avgOut +=parseFloat(sw4503['outbound']);	
+					avgIn +=parseFloat(sw4503['inbound']);
+					ratio = obj[start]['traffic_ratio'];		
+					count-=1;
+					sendData();
+				}
+			}
+			
+			console.log('ratio',ratio)
+			var ratioObj = jQuery.parseJSON(ratio);
+			var maxIn = Math.max.apply(Math, inbound),
+				maxOut = Math.max.apply(Math, outbound),
+			    minIn = Math.min.apply(Math, inbound),
+			    minOut = Math.min.apply(Math, outbound),
+			    sumIn = (avgIn/11),
+			    sumOut = (avgOut/11),
+			    avgIns = sumIn.toFixed(2),
+			    avgOuts = sumOut.toFixed(2);
+			var divIn = "<b>Min :</b>"+minIn+' Gbps. '+"<b>Max :</b>"+maxIn+' Gbps. '+"<b>Average:</b>"+ avgIns+' Gbps.',
+				divOut = "<b>Min :</b>"+minOut+' Gbps. '+"<b>Max :</b>"+maxOut+' Gbps. '+"<b>Average:</b>"+ avgOuts+' Gbps.';
+
+			$('#div-in').html(divIn);
+			$('#div-out').html(divOut);
+
+//-----------------------------------Chart------------------------------------------
+			// Data
+			var data_lineChart = {
+			  labels: label,
+			  datasets: [{
+			    label: "My First dataset",
+			    fillColor: "rgba(54,162,235,0.2)",
+			    strokeColor: "rgba(54,162,235,1)",
+			    pointColor: "rgba(54,162,235,1)",
+			    pointStrokeColor: "#fff",
+			    pointHighlightFill: "#fff",
+			    pointHighlightStroke: "rgba(54,162,235,1)",
+			    data: inbound 
+			  }, {
+			    label: "My Second dataset",
+			    fillColor: "rgba(255,161,181,0.2)",
+			    strokeColor: "rgba(255,161,181,1)",
+			    pointColor: "rgba(255,161,181,1)",
+			    pointStrokeColor: "#fff",
+			    pointHighlightFill: "#fff",
+			    pointHighlightStroke: "rgba(255,161,181,1)",
+			    data: outbound
+			  }]
+			};
+
+
+			var data_PieChart = [
+			  {
+			    value: ratioObj['10.77.1.2'],
+			    color:"#F7464A",
+			    highlight: "#FF5A5E",
+			    label: "R124 :"
+			  },
+			  {
+			    value: ratioObj['10.77.6.2'],
+			    color: "#46BFBD",
+			    highlight: "#5AD3D1",
+			    label: "R101C :"
+			  },
+			  {
+			    value: ratioObj['10.77.3.2'],
+			    color: "#FDB45C",
+			    highlight: "#FFC870",
+			    label: "R330A :"
+			  },
+			  {
+			    value: ratioObj['10.77.5.2'],
+			    color: "#4D5360",
+			    highlight: "#616774",
+			    label: "R415 :"
+			  },
+			  {
+			    value: ratioObj['10.77.4.1'],
+			    color: "#0066FF",
+			    highlight: "#0066FF",
+			    label: "SW4503 :"
+			  }
+
+			];
+
+			// Global + Custom Chart Config Options
+			var options = {
+				bezierCurve: true,
+				animation: true,
+				animationEasing: "easeOutQuart",
+				//showScale: false,
+				tooltipEvents: ["mousemove", "touchstart", "touchmove"],
+				tooltipCornerRadius: 3,
+				pointDot : true,
+				pointDotRadius : 4,
+				datasetFill : true,
+				scaleShowLine : true,
+				animationEasing : "easeOutBounce",
+				animateRotate : true,
+				animateScale : true,
+				responsive: true
+			};
+			// Load Chart
+			var ctx1 = document.getElementById("myLineChart").getContext("2d");
+			var ctx = document.getElementById("myDonutChart").getContext("2d");
+
+			var myLineChart = new Chart(ctx1).Line(data_lineChart, options);
+			var myDoughnutChart = new Chart(ctx).Doughnut(data_PieChart,options);
+			$('#bel-R124').css({'background': '#F7464A'})
+			$('#txt-R124').html(ratioObj['10.77.1.2']+' Gbps.')
+			$('#txt-R124').css({'border':'0px'})
+			$('#bel-R101C').css({'background': '#46BFBD'})
+			$('#txt-R101C').html(ratioObj['10.77.6.2']+' Gbps.')
+			$('#txt-R101C').css({'border':'0px'})
+			$('#bel-R330A').css({'background': '#FDB45C'})
+			$('#txt-R330A').html(ratioObj['10.77.3.2']+' Gbps.')
+			$('#txt-R330A').css({'border':'0px'})
+			$('#bel-R415').css({'background': '#4D5360'})
+			$('#txt-R415').html(ratioObj['10.77.5.2']+' Gbps.')
+			$('#txt-R415').css({'border':'0px'})
+			$('#bel-SW4503').css({'background': '#0066FF'})
+			$('#txt-SW4503').html(ratioObj['10.77.4.1']+' Gbps.')
+			$('#txt-SW4503').css({'border':'0px'})
+
+		});
+	</script>
+
+</head>
+<body>
+	<nav>
+		<div class="nav-wrapper  light-blue darken-4">
+		<div class="container">
+	        <a href="#!" class="brand-logo">FITM Monitoring v1.0</a>
+			<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+			<ul class="right hide-on-med-and-down ">
+				<li><a href="dashboard.html">Dashboard</a></li>
+				<li><a href="device.html">Device</a></li>
+				<li><a href="interface.html">Interface</a></li>
+				<li><a href="topranking.html">Top 10 Ranking</a></li>	
+			</ul>
+			<ul class="side-nav" id="mobile-demo">
+				<li><a href="dashboard.html">Dashboard</a></li>
+				<li><a href="device.html">Device</a></li>
+				<li><a href="interface.html">Interface</a></li>
+				<li><a href="topranking.html">Top 10 Ranking</a></li>
+			</ul>
+		</div>
+		</div>
+	</nav>
+
+	<div class="container">
+		<div class="row">
+			<div class="col s12 m12 l12" id="top"></div>
+
+			<div class="col s12 m3 l2" id="left">
+				<ul class="collection">
+					    <li class="collection-item avatar" id="li-device-SW4503">
+							<img src="../img/icon_router.png" alt="" class="circle">
+							<span class="title"><b>SW4503</b></span><br>
+							<b>10.77.4.1</b>
+						</li>
+						<li class="collection-item avatar" id="li-device-R124">
+							<img src="../img/icon_router.png" alt="" class="circle">
+							<span class="title"><b>R124</b></span><br>
+							<b>10.77.1.2</b>
+						</li>
+						<li class="collection-item avatar" id="li-device-R101C">
+							<img src="../img/icon_router.png" alt="" class="circle">
+							<span class="title"><b>R101C</b></span><br>
+							<b>10.77.6.2</b>
+						</li>
+						<li class="collection-item avatar" id="li-device-R330A">
+							<img src="../img/icon_router.png" alt="" class="circle">
+							<span class="title"><b>R330A</b></span><br>
+							<b>10.77.3.2</b>
+						</li>
+						<li class="collection-item avatar" id="li-device-R415">
+							<img src="../img/icon_router.png" alt="" class="circle">
+							<span class="title"><b>R415</b></span><br>
+							 <b>10.44.5.2</b>
+						</li>
+				</ul>
+			</div><!-- left -->
+
+
+			<div class=" col s12 m9 l6" id="center">
+				<div class="card-panel col s12 m10 l12" id="center">
+					<div class="col-xs-4">
+						<div class="panel panel-default">
+
+							<div class="panel-heading">
+								<h4 class="panel-title"><span class="blue-text text-darken-2">Internet Traffic (Switch SW4503)</span></h4>
+							</div>
+
+							<canvas id="myLineChart" class="chart"></canvas>
+							<ul class="collection" id="net-traff-txt">
+								<ul class="collection col s12 m3 l2" id="div-all">
+							      	<li class="collection" id="inbound"><center><b>Inbound</b></center></li>
+							        <li class="collection" id="outbound"><center><b>Outbound</b></center></li>
+							    </ul>
+							    <ul class="collection" >
+							      	<li class="collection-item" id="div-in"></li>
+							        <li class="collection-item" id="div-out"></li>
+							    </ul>
+						    </ul>
+						</div>
+					</div> 
+				</div>
+			</div><!-- center -->
+
+			<div class=" col s12 m8 l4" id="right-top">
+				<div class="card-panel col s12 m8 l12" id="right-top">
+				  	<div class="panel-heading">
+			         	<h4 class="panel-title"><span class="blue-text text-darken-2">Traffic Ratio</span></h4>
+			        </div>
+				    <div class="panel-content text-center">
+			          	<canvas id="myDonutChart" class="chart"></canvas>
+			        </div>
+			        <ul class="collection" id="ratio-txt">
+						<ul class="collection col s6 m9 l3" id="ul-bel">
+					      	<li class="collection" id="bel-SW4503"><center>
+					      		<b class="grey-text text-lighten-5">SW4503</b></center>
+					      	</li>
+					        <li class="collection" id="bel-R124"><center>
+					        	<b class="grey-text text-lighten-5">R124</b></center>
+					        </li>
+					        <li class="collection" id="bel-R101C"><center>
+					        	<b class="grey-text text-lighten-5">R101C</b></center>
+				        	</li>
+					    </ul>
+					    <ul class="collection col s6 m9 l3" id="txt-ratio">
+					      	<li class="collection txt-ratio" id="txt-SW4503"></li>
+					        <li class="collection txt-ratio" id="txt-R124"></li>
+					        <li class="collection txt-ratio" id="txt-R101C"></li>
+					    </ul>
+					    
+					    <ul class="collection col s6 m9 l3" id="ul-bel">
+					        <li class="collection" id="bel-R330A"><center>
+					        	<b class="grey-text text-lighten-5">R330A</b></center>
+					        </li>
+					        <li class="collection" id="bel-R415"><center>
+					        	<b class="grey-text text-lighten-5">R415</b></center>
+				        	</li>
+					    </ul>
+					    <ul class="collection col s6 m9 l3" id="txt-ratio">
+					        <li class="collection txt-ratio" id="txt-R330A"></li>
+					        <li class="collection txt-ratio" id="txt-R415"></li>					       
+					    </ul>
+					</ul>
+				</div>
+			</div><!-- right -->
+	
+
+
+
+	  </div><!-- row -->
+	</div><!-- container -->
+
+</body>
+</html>
+
+	<!-- 	 <div class="col-xs-12 text-center">
+		 <h2>Charting with Chartjs</h2>
+					</div>
+					
+					<div class="col-xs-4">
+		 <div class="panel panel-default">
+		   <div class="panel-heading">
+		     <h3 class="panel-title">Line Chart</h3>
+		   </div>
+		   <div class="panel-content text-center">
+		     <canvas id="myLineChart" class="chart"></canvas>
+		   </div>
+		 </div>
+					</div>  -->
+
+  <!--   <div class="col-xs-4">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Donut Chart</h3>
+      </div>
+      <div class="panel-content text-center">
+        <canvas id="myDonutChart" class="chart"></canvas>
+      </div>
+      <div class="panel-footer">A simple Line Chart with basic settings</div>
+    </div>
+  </div> -->

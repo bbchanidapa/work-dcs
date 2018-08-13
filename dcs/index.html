@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+  <!-- <link rel="stylesheet" href="/resources/demos/style.css"> -->
+ <link rel="stylesheet" type="text/css" href="style.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+  <script>
+  		var sizeChair      = 50,
+  			widthFloorplan  = '',
+  			heightFoorplan = '',
+  			mode           = "",
+  			count          = "",
+  			coordinate     = [],v
+  			code           = [],
+  			countChair     = "";
+
+		$(document).ready(function(){
+			$('#upload').on('click', function() {
+				$('.chair').remove();
+			});
+			$( "#slider-range-min" ).slider({
+				range: "min",
+				value: 1,
+				min: 50,
+				max: 100,
+				slide: function( event, ui ) {
+					$( "#amount" ).val( ui.value+'px.' );
+					var count = $( "#slider-range-min" ).slider( "value" ) ;
+					sizeChair = ui.value;
+					$('.chair').css({'height': sizeChair });
+					console.log('size',ui.value);
+				}
+			});
+			$( "#amount" ).val( $( "#slider-range-min" ).slider( "value" ));
+				console.log('create');
+				mode = 'create';
+				$('h1').html(mode);
+				$('#demo').on('click', action);
+			});
+			$('#delete').on('click', function() {
+		    	mode = 'delete';
+		    	$('h1').html(mode);
+		    	$('#demo').one('click', action);
+				$('.chair').on('click', function() {
+					$( this ).remove();
+					var  id = $( this ).attr('id');
+					for (var key in coordinate){
+						for (var index in coordinate[key]){
+							if(coordinate[key][index] == id ){
+								console.log('del()',index,coordinate[key][index]);
+								coordinate.splice(index, 1);
+							}
+						}
+					}
+					console.log(coordinate)
+				})
+			});
+			$('#save').on('click', function() {
+				sendToBackend();
+			});
+		});
+		function sendToBackend(){
+			for(var key in coordinate){
+				for (var index in coordinate[key]){
+					if (index == 'id'){
+						console.log(coordinate[key][index],key);
+						console.log(coordinate[key][index] = 'A'+key);
+					}
+				}
+			}
+			console.log(coordinate);
+			var _size           = sizeChair,
+				_widthFloorplan = widthFloorplan,
+				_heightFoorplan = heightFoorplan,
+				_path           = path,
+				_code           = coordinate;
+
+			/*$.ajax({
+				url: "database.php",
+				type: "POST",
+				data: {
+					size  : _size,
+					width : _widthFloorplan,
+					height: _heightFoorplan,
+					path  : _path
+				}
+			}).done(function( data ) {
+				console.log(data);
+			});*/
+			//console.log(JSON.stringify(_code));
+
+			$.ajax({
+				url: "dataSeatsToDB.php",
+				type: "POST",
+				data: {
+					code    : JSON.stringify(_code)
+				}
+			}).done(function( data ) {
+				//data = jQuery.parseJSON(data);
+				console.log(data);
+			});
+		}
+	    function submitForm() {
+            console.log("submit event");
+            var formData = new FormData(document.getElementById("fileinfo"));
+            formData.append("label", "WEBUPLOAD");
+            $.ajax({
+				url: "moveFile.php",
+				type: "POST",
+				data: formData,
+				processData: false,
+				contentType: false
+            }).done(function( data ) {
+            	data = jQuery.parseJSON(data);
+	            var div = $('#demo');
+	            widthFloorplan  = data.width;
+	            heightFoorplan = data.height;
+	            path           = data.pathFile;
+				calCoordinate(widthFloorplan,heightFoorplan,data.pathFile);
+                $('#storage').html('Save in : '+data.pathFile);
+	        	div.css({'background': 'url('+data.pathFile+') top left no-repeat'});
+	        	div.css({'width': widthFloorplan });
+	        	div.css({'background-size': 'auto 600px '});
+
+            });
+            return false;
+        }//Func Submit
+        function action() {
+			if(mode == 'create'){
+				console.log('action',mode);
+				var x        = event.clientX - (sizeChair/2),
+					y   	 = event.clientY- (sizeChair/2),
+					parent   = $("#demo"),
+					chair 	 = $('<img class="chair">'),
+					fileName = "img/img1.png",
+					list     = {};
+
+				if ( y > parent.offset().top && x > parent.offset().left ){
+					if ((x+(sizeChair/2))< parent.width() && (y-(sizeChair*2))< parent.height() ){
+						countChair++;
+						chair.attr('src',fileName);
+						chair.css({'height': sizeChair });
+						chair.attr('id','A'+countChair);
+						chair.css({'position':'absolute'});
+						chair.offset({ top: (y-parent.offset().top),left:(x-parent.offset().left) });
+						$("#demo").append(chair);
+
+							list['id']  = 'A'+countChair;
+							list['top'] = (y-parent.offset().top);
+							list['left']= (x-parent.offset().left);
+							coordinate.push(list);
+							console.log(coordinate);
+
+						//For Log coordinate Chair
+						for(var key in coordinate){
+							console.log(key,coordinate[key]);
+						}
+
+						$( function() {
+							var $start = $( "#event-start" ),
+						    	child  = $("#A"+countChair);
+
+							child.draggable({
+								containment:"#demo",
+								scroll: false,
+								drag: function() {
+									var top  = chair.offset().top-parent.offset().top,
+                              			left = chair.offset().left-parent.offset().left;
+                                    updateCounterStatus( $start, top, left );
+									list['top'] = top;
+									list['left'] = left;
+                                }
+							});
+
+							function updateCounterStatus( $event,updateY,updateX) {
+								if ( !$event.hasClass( "ui-state-hover" ) ) {
+									$event.addClass( "ui-state-hover" )
+									.siblings().removeClass("ui-state-hover");
+									chair.attr('data-top',updateY);
+						            chair.attr('data-left',updateX);
+						            //For Log coordinate Chair
+									for(var key in coordinate){
+										console.log('forMove',key,coordinate[key]);
+									}
+								}
+							}//function
+						});
+
+					}//last
+				}//if first
+			}
+		}
+        function calCoordinate(widthFoor,heightFoor,pathh){
+        	var summary = '',
+        		img = $('<img></img>');
+    		img.attr('src',pathh);
+    		img.css({'border':'2px solid #ccc'});
+    		img.css({'margin-left':'20px'});
+    		img.css({'margin-right': '20px'});
+
+        	if ( heightFoor <= 600 ) {
+        		summary = 600 / heightFoor;
+        		img.css({'height':summary*heightFoor});
+        		img.css({'width':summary*widthFoor});
+
+				heightFoorplan = summary*heightFoor;
+				widthFloorplan  = summary*widthFoor;
+        		$('#test').html(img);
+        	}else{
+        		summary = heightFoor / 600;
+        		img.css({'height':summary*heightFoor});
+        		img.css({'width':summary*widthFoor});
+				heightFoorplan = summary*heightFoor;
+				widthFloorplan  = summary*widthFoor;
+        		$('#test').html(img);
+        	}
+        	console.log('cal',summary,heightFoorplan,widthFloorplan);
+        }
+  </script>
+</head>
+<body>
+<div style="height:150px;">
+	<form method="post" id="fileinfo" name="fileinfo" onsubmit="return submitForm();">
+		<div id="slider-range-min" style="width:20%; display:inline-block;"></div>
+		<label for="amount" >Size: </label>
+		<input type="text" id="amount" readonly style="width:20px;">
+		<input type="file" name="file" required style="width:190px;"/>
+		<input type="submit" value="Upload" id="upload" /><br>
+
+		<label id="storage"></label><br>
+		Room: <input type="text" id="nameFloorplan"/>
+		Order: <input type="text" id="order"/>
+		<input type="button" value="Save" id="save" />
+		<input type="button" value="Delete" id="delete" />
+		<input type="button" value="Create" id="create" />
+		<h1></h1>
+	</form>
+</div>
+    <div id="border">
+	    <div id="demo">
+	 		<p class="count"></p>
+		</div>
+	</div>
+<!-- <div id="test"></div> -->
+
+
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Upload Form</title>
+    <script src="//code.jquery.com/jquery-1.9.1.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script type="text/javascript">
+        function submitForm() {
+            console.log("submit event");
+            var formData = new FormData(document.getElementById("fileinfo"));
+            formData.append("label", "WEBUPLOAD");
+            $.ajax({
+				url: "moveFile.php",
+				type: "POST",
+				data: formData,
+				processData: false,
+				contentType: false
+            }).done(function( data ) {
+                console.log( data );
+                $('label').html('Path File : '+data);
+            	var img = $('<img></img>');
+	        	img.attr('src', data);
+	        	img.attr('id', 'img-floor-plan');
+	        	$('#demo').html(img);
+
+            }).done(function(){
+            	var sizeImage  = document.querySelector('img');
+
+				$("#img-floor-plan").on('click', function() {
+					var widthImage = sizeImage.clientWidth;
+					var heightImage= sizeImage.clientHeight;
+					var point 	  =$('#img-floor-plan').position();
+					var x   	  = event.clientX - 25;
+					var y   	  = event.clientY - 25;
+					var icon 	  = $("<img></img>");
+					var fileImage = "img/img1.png";
+
+					console.log( 'xWeb: ',x,'width: ',widthImage ,'|| yWeb: ',y,'heigh: ',heightImage );
+
+					if ( y > point.top && x > point.left ){
+						if ((x +30)< widthImage && (y)< heightImage ){
+							console.log(y);
+							icon.attr('src',fileImage);
+							icon.css({'height': '50px'});
+							icon.attr('id',x+y);
+							icon.css({'position':'absolute'});
+							icon.offset({ top: y, left: x });
+							$("#demo").append(icon);
+						}
+					}
+				});
+            });//done click
+            return false;
+        }//Func Submit
+    </script>
+</head>
+
+<body>
+    <form method="post" id="fileinfo" name="fileinfo" onsubmit="return submitForm();">
+        <label>Select a file:</label><br>
+        <input type="file" name="file" required />
+        <input type="submit" value="Upload" />
+    </form>
+    <div id="demo"></div>
+</body>
+</html>

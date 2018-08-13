@@ -1,0 +1,118 @@
+<html>
+<head>
+	<title>Network</title>
+	<meta charset="UTF-8">
+	<!-- script jquery -->
+	<script src="//code.jquery.com/jquery.min.js"></script>
+	<!-- Compiled and minified CSS -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
+	<!-- Compiled and minified JavaScript -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
+	<!--Import Google Icon Font-->
+	<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+	<!-- import plugin script -->
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js'></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/excanvas.js'></script>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+	<!--Let browser know website is optimized for mobile-->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
+
+	<style>
+		html { font-family: GillSans, Calibri, Trebuchet, sans-serif;}  
+		.parallax-container {
+		height: "your height here";	
+	    }
+		body{
+		    background-color: #f5f5f5;
+		}
+		.card-panel {
+			margin: 0rem 0 0rem 0; 
+		}
+	</style>
+	<script>
+		var url ="https://sheetsu.com/apis/v1.0/36686412691c?fields=time,traffic_toInterface";//sheet1
+		/*	function get(){
+			    return $.ajax({ 
+			        type: 'GET', 
+			        url: url,
+			        async: false,
+					success:function(data){
+						console.log('Get Ajax Success')
+					}
+			    });
+			}
+			var data  = get();
+			var obj   = jQuery.parseJSON(data['responseText']);
+			var traffic_link_obj = jQuery.parseJSON(obj[(obj.length-1)]['traffic_toInterface']);
+			var count_ = 12;
+			var avgIn = 0;
+			var avgOut= 0;
+			var start = obj.length-12;
+			var label = [],
+				traffic = [];*/
+
+		
+//-----------------------------------Document-------------------------------------------	
+		$(document).ready(function(){
+			$('.parallax').parallax();
+			$('.collapsible').collapsible({
+				accordion : false 
+			});
+			$('.button-collapse').sideNav({
+				menuWidth: 500, 
+				edge: 'right',
+				closeOnClick: true 
+			});  
+			$('.carousel').carousel();
+
+
+		});
+	</script>
+
+</head>
+<body>
+	<nav>
+		<div class="nav-wrapper  light-blue darken-4">
+		<div class="container">
+	        <a href="#!" class="brand-logo">FITM Monitoring v1.0</a>
+			<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+			<ul class="right hide-on-med-and-down ">
+				<li><a href="dashboard.html">Dashboard</a></li>
+				<li><a href="device.html">Device</a></li>
+				<li><a href="interface.html">Interface</a></li>
+				<li><a href="topranking.html">Top 10 Ranking</a></li>
+				<li><a href="event.html">Event</a></li>
+				<li><a href="network.html">Network</a></li>
+			</ul>
+			<ul class="side-nav" id="mobile-demo">
+				<li><a href="dashboard.html">Dashboard</a></li>
+				<li><a href="device.html">Device</a></li>
+				<li><a href="interface.html">Interface</a></li>
+				<li><a href="topranking.html">Top 10 Ranking</a></li>
+				<li><a href="event.html">Event</a></li>
+				<li><a href="network.html">Network</a></li>	
+			</ul>
+		</div>
+		</div>
+	</nav>
+
+	<div class="container">
+		<div class="row">
+			<div class="card-panel col s12 m9 l12" style="height: 500px">
+				<div class="card-panel col s12 m9 l12" style="height: 100px;margin-top: 100px;position:relative;">
+					<center>
+						<img src="../img/sw4503.png" style=" width: 10%;"><br>	
+					</center>
+				</div>
+				<div class="card-panel col s12 m9 l12" style="height: 50px">	
+
+				</div>
+				<div class="card-panel col s12 m9 l12" style="height: 50px"></div>
+			</div>
+
+	    </div><!-- row -->
+	</div><!-- container -->
+
+</body>
+</html>

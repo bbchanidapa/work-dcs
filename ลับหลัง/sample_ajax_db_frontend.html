@@ -1,0 +1,95 @@
+<html>
+<head>
+<script src="/js/jquery-1.12.4.min.js"></script>
+<script>
+    $(document).ready(init);
+    
+    function init() {
+        inputBinding();
+        ajaxList(undefined,function() {
+            $('#products').html('loading...');
+        }).done(function(data) {
+            console.log(data);
+            $('#products').html('');
+            data = JSON.parse(data);
+            for(var i=0;i<data.length;i++) {
+                drawListItem(data[i]);
+            }
+        });
+    }
+    function inputBinding() {
+        $('#newSubmit').on('click',function() {
+            var data = {
+                name: $('#newName').val(),
+                price: $('#newPrice').val()
+            }
+            return ajaxAdd(data,function() {
+                    $('#productAdd').children().hide();
+                }).done(function(data) {
+                    data = JSON.parse(data);
+                    $('#productAdd').children().show();
+                    console.log(data.id);
+                    ajaxList(data.id,function(){}).done(function(data) {
+                        data = JSON.parse(data)[0];
+                        //data[0] = data
+                        drawListItem(data);
+                    });
+                });
+        });
+    }
+    
+    function ajaxRequest(method_,data,beforeSend_) {
+        return $.ajax({
+                url: 'http://localhost/html/sample_ajax/sample_ajax_db_backend.php',
+                data: data,
+                method: method_,
+                beforeSend: beforeSend_
+            })
+    }
+    function ajaxList(productId,beforeSend) {
+        var pid = productId!='undefined' ? productId : "";
+        return ajaxRequest('get',{
+                list: 'products',
+                id: pid
+            },beforeSend);
+    }
+    function ajaxAdd(data,beforeSend) {
+        return ajaxRequest('post',{
+                add: 'products',
+                name: data.name,
+                price: data.price,
+            },beforeSend);
+    }
+    
+    // ui
+    function drawListItem(row) {
+        var listItem = $("<li></li>");
+        var spanName = $("<span class='name'></span>").html(row.name);
+        var spanPrice = $("<span class='price'></span>").html(row.price);
+        listItem.attr('data-row-id',row.id);
+        listItem.append(spanName);
+        listItem.append(spanPrice);
+        $('#products').append(listItem);
+    }
+    
+</script>
+</head>
+<body>
+
+<h1>Rows</h1>
+
+
+<div id='productAdd'>
+    <div>
+        Name <input id='newName' type='text' value='abc' placeholder='Product Name' />
+        Price <input id='newPrice' type='text' value='123' placeholder='Product Price' />
+        <input id='newSubmit' type='button' value='Add' />
+    </div>
+</div>
+<hr />
+<div id='products'>
+    <!--li></li-->
+</div>
+
+</body>
+</html>

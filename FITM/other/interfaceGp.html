@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+		<meta charset="utf-8" />
+		<title>Chart.js demo</title>
+		<!-- import plugin script -->
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js'></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+		<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js'></script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js'></script>
+		<script language="javascript" type="text/javascript" src="dist/excanvas.js"></script>
+		<script language="javascript" type="text/javascript" src="dist/jquery.min.js"></script>
+		<script language="javascript" type="text/javascript" src="dist/jquery.jqplot.min.js"></script>
+			<script type="text/javascript">
+			$(document).ready(function(){
+				var ctx = document.getElementById("myLineChart");
+				var data = {
+				    labels: ["9.00","10.00","11.00","12.00","13.00","14.00","15.00","16.00"],
+				    datasets: [
+				        {
+				            label: "Inbound",
+				            fill: false,
+				            lineTension: 0.1,
+				            backgroundColor: "rgba(62,77,212,0.4)",
+				            borderColor: "rgba(62,77,212,1)",
+				            borderCapStyle: 'butt',
+				            borderDash: [],
+				            borderDashOffset: 0.0,
+				            borderJoinStyle: 'miter',
+				            pointBorderColor: "rgba(62,77,212,1)",
+				            pointBackgroundColor: "#fff",
+				            pointBorderWidth: 1,
+				            pointHoverRadius: 5,
+				            pointHoverBackgroundColor: "rgba(62,77,212,1)",
+				            pointHoverBorderColor: "rgba(62,77,212,1)",
+				            pointHoverBorderWidth: 2,
+				            pointRadius: 1,
+				            pointHitRadius: 10,
+				            data: [65, 59, 80, 81, 56, 55,40,15],
+				            spanGaps: false,
+				        },
+				        {
+				            label: "Outbound",
+				            fill: false,
+				            lineTension: 0.1,
+				            backgroundColor: "rgba(253,133,186,0.4)",
+				            borderColor: "rgba(253,133,186,1)",
+				            borderCapStyle: 'butt',
+				            borderDash: [],
+				            borderDashOffset: 0.0,
+				            borderJoinStyle: 'miter',
+				            pointBorderColor: "rgba(253,133,186,1)",
+				            pointBackgroundColor: "#fff",
+				            pointBorderWidth: 1,
+				            pointHoverRadius: 5,
+				            pointHoverBackgroundColor: "rgba(253,133,186,1)",
+				            pointHoverBorderColor: "rgba(253,133,186,1)",
+				            pointHoverBorderWidth: 2,
+				            pointRadius: 1,
+				            pointHitRadius: 10,
+				            data: [80, 35, 70, 50, 67, 21,25,35],
+				            spanGaps: false,
+				        }
+				    ]
+				};
+				var myLineChart = new Chart(ctx, {
+					type: 'line',
+					data: data
+				});
+
+			});
+		</script>
+    </head>
+<body>
+    <!-- line chart canvas element -->
+    <canvas id="myLineChart" width="600" height="400"></canvas>
+</body>
+</html>

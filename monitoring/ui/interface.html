@@ -1,0 +1,480 @@
+<html>
+<head>
+	<title>Interface</title>
+	<meta charset="UTF-8">
+	<!-- script jquery -->
+	<script src="//code.jquery.com/jquery.min.js"></script>
+	<!-- Compiled and minified CSS -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
+	<!-- Compiled and minified JavaScript -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
+	<!--Import Google Icon Font-->
+	<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+	<!-- import plugin script -->
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js'></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/excanvas.js'></script>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+	<!--Let browser know website is optimized for mobile-->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
+
+	<style>
+		html { font-family: GillSans, Calibri, Trebuchet, sans-serif;}  
+		.parallax-container {
+		height: "your height here";	
+	    }
+		.chart{
+		  vertical-align: middle;
+		  width: 100%;
+		  margin: 0 auto; 
+		  position: relative;
+		  display: inline-block;
+		}
+		.tabs .indicator{
+			background-color: #0089ec ;
+		}
+		.collection .collection-item.avatar {
+			min-height: 60px;
+		}
+		.row .col {
+			padding: 0 0rem;
+		}
+		.collection a.collection-item {
+			color: #607d8b;
+		}
+		.collection .collection-item {
+   			line-height: 2rem; 
+   			padding: 0px 0px;
+		}
+		.dropdown-content li>span {
+			font-size: 13px;
+			
+		}
+		.select-dropdown li img { 
+			height: 30px;
+    		width: 30px;
+		}
+		#div-chart{
+			margin-left: 20px;
+		}
+		.collection{
+			border: 0px;
+		}
+		h4{
+			margin: 0;
+		}
+		body{
+		    background-color: #f5f5f5;
+		}
+	
+	</style>
+	<script>
+		var url ="https://sheetsu.com/apis/v1.0/997a12dcdeda?fields=time,traffic_interface,status";//sheet1
+			function get(){
+			    return $.ajax({ 
+			        type: 'GET', 
+			        url: url,
+			        async: false,
+					success:function(data){
+						console.log('Get Ajax Success')
+					}
+			    });
+			}
+			var data  = get();
+			var obj   = jQuery.parseJSON(data['responseText']);
+			var traffic_link_obj = jQuery.parseJSON(obj[(obj.length-1)]['traffic_interface']);
+			var status_obj = jQuery.parseJSON(obj[(obj.length-1)]['status']);
+			var count_ = 12;
+			var avgIn = 0;
+			var avgOut= 0;
+			var start = obj.length-12;
+			var label = [],
+				inbound = [],
+				outbound = [];
+		/*	console.log(status_obj)*/
+//-----------------------------------Query Inbpound Outbound-------------------------------------------				
+			sendData();
+			function sendData(){
+				if(count_ > 0){ 
+					label.push(obj[start]['time'].substr(0,5));	
+					var traffic_obj = jQuery.parseJSON(obj[(start)]['traffic_interface'])
+
+					for(var host in traffic_obj){
+						if(!(host in inbound) || !(host in outbound)){
+							inbound[host] = []
+							outbound[host] = []
+						}//if
+						for(var key in traffic_obj[host]['inbound']){
+							if(!(key in inbound[host]) || !(key in outbound[host])){
+								inbound[host][key] = []
+								outbound[host][key] = []
+								//console.log('if',key)
+								inbound[host][key].push(traffic_obj[host]['inbound'][key])
+								outbound[host][key].push(traffic_obj[host]['outbound'][key])
+							}else{
+								//console.log('else',key)
+								inbound[host][key].push(traffic_obj[host]['inbound'][key])
+								outbound[host][key].push(traffic_obj[host]['outbound'][key])	
+							}
+			
+						}//for
+						
+					}//for
+
+					start+=1;
+					count_-=1;
+					sendData();	
+				}//if
+			}//func
+			console.log(inbound,outbound)
+
+//-----------------------------------Document-------------------------------------------	
+		$(document).ready(function(){
+			$('.parallax').parallax();
+			$('.collapsible').collapsible({
+				accordion : false 
+			});
+			$('.button-collapse').sideNav({
+				menuWidth: 500, 
+				edge: 'right',
+				closeOnClick: true 
+			});  
+			$('.carousel').carousel();
+
+//-----------------------------------Create interface-------------------------------------------	
+		var count = 0;	
+		var id =['#belSW4503','#belR124','#belR101C','#belR330A','#belR415','#belRshop'];	
+		for(var host in traffic_link_obj){
+			for(var keylink in traffic_link_obj[host]['interface']){
+				var check_interface = traffic_link_obj[host]['interface'][keylink].substr(1,1);
+
+				if(check_interface == 'F' || check_interface == 'T'||check_interface == 'G'){
+					var div = $("<div class='chip'></div>");
+					var img = $("<img alt='Contact Person'>");
+					var a = $('<a></a>');
+					var txt = '';	
+					var index = traffic_link_obj[host]['interface'][keylink]
+					//********************status*******************FastEthernet TenGigabitEthernet GigabitEthernet
+					
+					if(status_obj[host][index] == 'Up'){
+						img.attr('src','../img/rj_blue.png')
+						//console.log(host,status_obj[host][index],index,keylink)
+					}
+					else if(status_obj[host][index] == 'Down'){
+						img.attr('src','../img/rj_red.png')
+					}
+					//******************Cut Name interface********************
+					if(check_interface == 'F'){
+
+						txt += index.substr(1,2)	
+						txt += ' '
+						txt += index.substr(13,(index.length))
+						txt = txt.substr(0,txt.indexOf('"'))
+						a.attr('href','#'+keylink)
+					    a.append(txt)
+					}
+					else if(check_interface == 'G'){
+						txt += index.substr(1,2)	
+						txt += ' '
+						txt += index.substr(16,(index.length))
+						txt = txt.substr(0,txt.indexOf('"'))	
+						a.attr('href','#'+keylink)
+					    a.append(txt)
+					}
+					else if(check_interface == 'T'){
+						txt += index.substr(1,3)	
+						txt += ' '
+						txt += index.substr(19,(index.length))
+						txt = txt.substr(0,txt.indexOf('"'))	
+						a.attr('href','#'+keylink)
+					    a.append(txt)
+					}
+					//*************Create Card link****************			
+					div.append(img)
+					div.append(a)	
+					$(id[count]).append(div);
+				}
+				
+			}
+			count+=1;		
+		}
+		$('.collapsible').collapsible();
+
+//-----------------------------------click-------------------------------------------
+//SW4503_tab R124_tab R101C_tab R330A_tab Rshop_tab R415_tab collapsible-body
+		var menu = 'SW4503'
+		$('.blue-text.text-darken-2#tab').on('click', function() {
+			menu = $(this).attr("href");
+
+			if('SW4503' != menu){
+				menu = menu.substr(1,menu.length)
+			}
+			/*var id    = ['2','10101','10101','10101','10101','10101'];
+			var link     = '#'+menu+'_chart';
+			var host     = ['10.77.4.1','10.77.1.2','10.77.6.2','10.77.3.2','10.77.8.2','10.77.5.2'];
+
+			console.log('index',index)							
+			for(var key in host){
+				var ip    = host[key];
+				var index = id[key];
+				if(typeof(inbound[ip][index][0]) == 'string'){
+					var endIn    = inbound[ip][index][0].indexOf(','),
+						txt1_In  = inbound[ip][index][0].substr(0,endIn),
+						txt2_In  = inbound[ip][index][0].substr(endIn+1,inbound[ip][index][0].length);
+					var endOut   = outbound[ip][index][0].indexOf(','),
+						txt1_Out = outbound[ip][index][0].substr(0,endOut),
+						txt2_Out = outbound[ip][index][0].substr(endOut+1,outbound[ip][index][0].length);
+					//console.log(inbound[ip][index][i],outbound[ip][index][i])
+					inbound[ip][index][0] = parseFloat(txt1_In+txt2_In)
+					outbound[ip][index][0] = parseFloat(txt1_Out+txt2_Out)
+				}
+				console.log('menu =',menu,inbound[ip][index][0],outbound[ip][index][0])
+				detail_Chart(ip,index,link)
+		    }	*/
+		})
+		
+
+		$('.chip a').on('click', function() {	
+			var canvas   = $('<canvas></canvas>');
+			var index    = $(this).attr("href"),
+				index    = index.substr(1,index.length);		
+			var bel      = '#bel'+menu;	
+			var ip       = $(bel).attr('value'); 
+			var link     = '#'+menu+'_chart';
+
+			//*****************Convert Str To Int**********************	
+     		if(typeof(inbound[ip][index][0]) == 'string'){
+				for(var i in inbound[ip][index]){
+					var endIn    = inbound[ip][index][i].indexOf(','),
+						txt1_In  = inbound[ip][index][i].substr(0,endIn),
+						txt2_In  = inbound[ip][index][i].substr(endIn+1,inbound[ip][index][i].length);
+					var endOut   = outbound[ip][index][i].indexOf(','),
+						txt1_Out = outbound[ip][index][i].substr(0,endOut),
+						txt2_Out = outbound[ip][index][i].substr(endOut+1,outbound[ip][index][i].length);
+					//console.log(inbound[ip][index][i],outbound[ip][index][i])
+					inbound[ip][index][i] = parseFloat(txt1_In+txt2_In)
+					outbound[ip][index][i] = parseFloat(txt1_Out+txt2_Out)
+				}
+			}
+			console.log('inbound',index,inbound[ip][index],ip)
+			console.log('outbound',index,outbound[ip][index],ip)
+			//***********************Fide Min Max************************
+			var maxIn    = Math.max.apply(Math, inbound[ip][index]),
+				maxOut   = Math.max.apply(Math, outbound[ip][index]),
+				minIn    = Math.min.apply(Math, inbound[ip][index]),
+				minOut   = Math.min.apply(Math, outbound[ip][index]);
+
+			//**************************Title****************************
+			var h4       = $('<h4 class="panel-title" style="margin-top:20px;"></h4>'),
+				txt_in   = $('<h6 class="panel-title"></h6>'),
+				txt_out  = $('<h6 class="panel-title"></h6>'),
+				span     = $('<span></span>'),
+				div      = $('<div></div>'),
+				end_cut  = traffic_link_obj[ip]['interface'][index].length-2;
+
+				console.log(index,ip,traffic_link_obj[ip]['interface'][index])
+
+				span.attr('class','blue-text text-darken-2')
+				span.html(traffic_link_obj[ip]['interface'][index].substr(1,end_cut))
+				h4.html(span)
+				div.append(h4)
+
+				var span_in = $('<b><span></span></b>').css({'color':'rgba(54,162,235,1)'})
+				span_in.html('Inbound'+'<h6><b>Min: </b>'+minIn+'Mbps. '+'<b>Max: </b>'+maxIn+'Mbps. </h6>')
+				txt_in.html(span_in)
+				div.append(txt_in)
+
+				var span_out = $('<b><span></span></b>').css({'color':'rgba(255,99,132,1)'})
+				span_out.html('Outbound'+'<h6><b>Min: </b>'+minOut+'Mbps. '+'<b>Max: </b>'+maxOut+'Mbps. </h6>')
+				txt_out.html(span_out)
+				div.append(txt_out)
+				div.css({'margin-left':'40px'})
+				$(link).html(div)
+
+			//***********************Chart canvas************************
+				canvas.attr('id',"LineChart"+menu)
+				canvas.attr('class',"chart")
+				$(link).append(canvas)
+				/*canvas.css({"width":"600px"})*/
+				chart("LineChart"+menu,inbound[ip][index],outbound[ip][index])		
+
+			//detail_Chart(ip,index,link)
+		})//click Chip
+
+		function detail_Chart(ip,index,link){
+			
+			
+		}
+//-----------------------------------Query-------------------------------------------	
+			function chart(idChart,inboundFunc,outboundFunc){
+						var data_lineChart = {
+							  labels: label,
+							  datasets: [{
+							    label: "Inbound",
+							    fillColor: "rgba(74,171,237,0.2)",
+							    strokeColor: "rgba(74,171,237,0.1)",
+							    pointColor: "rgba(74,171,237,0.1)",
+							    pointStrokeColor: "#fff",
+							    pointHighlightFill: "#fff",
+							    pointHighlightStroke: "rgba(74,171,237,1)",
+							    data: inboundFunc  
+							  }, {
+							    label: "Outbound",
+							    fillColor: "rgba(255,208,208,0.2)",
+							    strokeColor: "rgba(255,208,208,1)",
+							    pointColor: "rgba(255,208,208,1)",
+							    pointStrokeColor: "#fff",
+							    pointHighlightFill: "#fff",
+							    pointHighlightStroke: "rgba(255,208,208,1)",
+							    data: outboundFunc
+							  }]
+							};
+							// Global + Custom Chart Config Options
+							var options = {
+								bezierCurve: true,
+								animation: true,
+								animationEasing: "easeOutQuart",
+								tooltipEvents: ["mousemove", "touchstart", "touchmove"],
+								tooltipCornerRadius: 3,
+								pointDot : true,
+								pointDotRadius : 4,
+								datasetFill : true,
+								scaleShowLine : true,
+								animationEasing : "easeOutBounce",
+								animateRotate : true,
+								animateScale : true,
+								responsive: true
+							};
+							// Load Chart
+							var lineChart = document.getElementById(idChart).getContext("2d");
+							var myLineChart = new Chart(lineChart).Line(data_lineChart, options);
+				}//func
+
+		});
+	</script>
+
+</head>
+<body>
+	<nav>
+		<div class="nav-wrapper  light-blue darken-4">
+		<div class="container">
+	        <a href="#!" class="brand-logo">FITM Monitoring v1.0</a>
+			<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+			<ul class="right hide-on-med-and-down ">
+				<li><a href="dashboard.html">Dashboard</a></li>
+				<li><a href="device.html">Device</a></li>
+				<li><a href="interface.html">Interface</a></li>
+				<li><a href="topranking.html">Top 10 Ranking</a></li>
+				<!-- <li><a href="event.html">Event</a></li>
+				<li><a href="network.html">Network</a></li> -->
+			</ul>
+			<ul class="side-nav" id="mobile-demo">
+				<li><a href="dashboard.html">Dashboard</a></li>
+				<li><a href="device.html">Device</a></li>
+				<li><a href="interface.html">Interface</a></li>
+				<li><a href="topranking.html">Top 10 Ranking</a></li>
+				<!-- <li><a href="event.html">Event</a></li>
+				<li><a href="network.html">Network</a></li>	 -->
+			</ul>
+		</div>
+		</div>
+	</nav>
+
+	<div class="container">
+		<div class="row">
+			
+			    <div class="col s12">
+			      <ul class="tabs">
+			        <li class="tab col s3"><a href="#SW4503" class="blue-text text-darken-2" id="tab">SW4503</a></li>
+			        <li class="tab col s3"><a href="#R124"   class="blue-text text-darken-2" id="tab">R124</a></li>
+			        <li class="tab col s3"><a href="#R101C"  class="blue-text text-darken-2" id="tab">R101C</a></li>
+			        <li class="tab col s3"><a href="#R330A"  class="blue-text text-darken-2" id="tab">R330A</a></li>
+			        <li class="tab col s3"><a href="#Rshop"   class="blue-text text-darken-2" id="tab">Rshop</a></li>
+			        <li class="tab col s3"><a href="#R415"   class="blue-text text-darken-2" id="tab">R415</a></li>		
+			      </ul>
+			    </div>
+			    <div id="SW4503" class="col l12"><br>
+			   		<div class="panel-heading">
+						<h4 class="panel-title"><span class="blue-text text-darken-2">Interface</span></h4>
+					</div>
+
+			    	<div class="card-panel col s12 m12 l5" style="padding-right: 5px;" style="background: #f5f5f5;">
+				    	<div class="col s12 m12 l12" id="belSW4503" value="10.77.4.1" style="padding-right: 50px; padding-top: 10px; padding-left: 10px;"></div>				
+				    </div>
+
+				    <div class="col s12 m12 l6" style="padding-right: 10px;" style="background: #f5f5f5;">
+						<div class="card-panel col s12 m9 l12"  id="SW4503_chart" style="margin-left: 50px;padding-right: 10px;"></div>
+					</div>
+				</div>
+				<!-- ********************************* -->
+			    <div id="R124" class="col s12 m3 l12"><br>
+					<div class="panel-heading">
+						<h4 class="panel-title"><span class="blue-text text-darken-2">Interface</span></h4>
+					</div>
+
+			    	<div class="card-panel col s12 m12 l5" style="padding-right: 5px;" style="background: #f5f5f5;">
+				    	<div class="row col s12 m12 l12" id="belR124" value="10.77.1.2" style="padding-right: 50px; padding-top: 10px; padding-left: 10px;"></div>
+ 					</div>
+
+					   <div class="col s12 m12 l6" style="padding-right: 10px;" style="background: #f5f5f5;">
+						<div class="card-panel col s12 m9 l12"  id="R124_chart" style="margin-left: 50px;padding-right: 10px;"></div>
+					</div>
+			    </div>
+				<!-- ********************************* -->
+			    <div id="R101C" class="col l12"> <br>
+					<div class="panel-heading">
+						<h4 class="panel-title"><span class="blue-text text-darken-2">Interface</span></h4>
+					</div>
+					<div class="card-panel col s12 m12 l5" style="padding-right: 5px;" style="background: #f5f5f5;">
+				    	<div class="row col s12 m12 l12"  id="belR101C" value="10.77.6.2" style="padding-right: 50px; padding-top: 10px; padding-left: 10px;"></div>
+				    </div>
+					   <div class="col s12 m12 l6" style="padding-right: 10px;" style="background: #f5f5f5;">
+						<div class="card-panel col s12 m9 l12"  id="R101C_chart" style="margin-left: 50px;padding-right: 10px;"></div>
+					</div>
+			    </div>
+				<!-- ********************************* -->
+			    <div id="R330A" class="col l12"><br>
+			   		<div class="panel-heading">
+						<h4 class="panel-title"><span class="blue-text text-darken-2">Interface</span></h4>
+					</div>
+					<div class="card-panel col s12 m12 l5" style="padding-right: 5px;" style="background: #f5f5f5;">
+				    	<div class="row col s12 m12 l12" id="belR330A" value="10.77.3.2" style="padding-right: 50px; padding-top: 10px; padding-left: 10px;"></div>
+				    </div>
+					   <div class="col s12 m12 l6" style="padding-right: 10px;" style="background: #f5f5f5;">
+						<div class="card-panel col s12 m9 l12"  id="R330A_chart" style="margin-left: 50px;padding-right: 10px;"></div>
+					</div>
+			    </div>
+				<!-- ********************************* -->
+				<div id="Rshop" class="col l12"><br>
+					<div class="panel-heading">
+						<h4 class="panel-title"><span class="blue-text text-darken-2">Interface</span></h4>
+					</div>
+
+					<div class="card-panel col s12 m12 l5" style="padding-right: 5px;" style="background: #f5f5f5;">
+				    	<div class="row col s12 m12 l12" id="belRshop" value="10.77.8.2" style="padding-right: 50px; padding-top: 10px; padding-left: 10px;"></div>
+				    </div>
+
+					   <div class="col s12 m12 l6" style="padding-right: 10px;" style="background: #f5f5f5;">
+						<div class="card-panel col s12 m9 l12"  id="Rshop_chart" style="margin-left: 50px;padding-right: 10px;"></div>
+					</div>
+				</div>
+				<!-- ********************************* -->
+			    <div id="R415" class="col l12"><br>
+					<div class="panel-heading">
+						<h4 class="panel-title"><span class="blue-text text-darken-2">Interface</span></h4>
+					</div>
+					
+					<div class="card-panel col s12 m12 l5" style="padding-right: 5px;" style="background: #f5f5f5;">
+				    	<div class="row col s12 m12 l12" id="belR415" value="10.77.5.2" style="padding-right: 50px; padding-top: 10px; padding-left: 10px;"></div>
+				    </div>
+
+					   <div class="col s12 m12 l6" style="padding-right: 10px;" style="background: #f5f5f5;">
+						<div class="card-panel col s12 m9 l12" id="R415_chart" style="margin-left: 50px;padding-right: 10px;"></div>	
+					</div>
+			    </div>
+
+	  </div><!-- row -->
+	</div><!-- container -->
+
+</body>
+</html>

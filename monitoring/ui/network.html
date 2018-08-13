@@ -1,0 +1,161 @@
+<html>
+<head>
+	<title>Dashboard</title>
+	<meta charset="UTF-8">
+	<!-- script jquery -->
+	<script src="//code.jquery.com/jquery.min.js"></script>
+	<!-- Compiled and minified CSS -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
+	<!-- Compiled and minified JavaScript -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
+	<!--Import Google Icon Font-->
+	<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<!-- import plugin script -->
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js'></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/excanvas.js'></script>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+	<!--Let browser know website is optimized for mobile-->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
+<!-- <script src="../include/confic.js" id="confic"></script> -->
+	<style>
+		html { font-family: GillSans, Calibri, Trebuchet, sans-serif;}  
+		.parallax-container {
+		height: "your height here";	
+	    }
+	    #top{
+			height: 50px;		
+		}
+		#left{
+			height: 500px;		
+		}
+		#center{
+			position:relative;
+			height: 500px;		
+		}
+		#right-top{
+			position:relative;
+			height: 500px;		
+		}
+		#right-down{
+			position:relative;
+			height: 150px;		
+		}
+		#trafficeSw4503{
+			position:relative;
+			width: 100%;		
+		}
+		#countries{
+			position:relative;
+			width: 100%;
+		} 
+		.ilike-blue-container {
+			@extend .blue-text, .text-lighten-4;
+		}
+		.ilike-blue-container {
+			@extend .blue, .lighten-4;
+		}
+		.chart{
+		  vertical-align: middle;
+		  width: 100%;
+		  margin: 0 auto; 
+		  position: relative;
+		  display: inline-block;
+
+		}
+		#inbound{
+			position:relative;
+			background: rgba(54,162,235,1);
+		}
+		#outbound{
+			position:relative;
+			background: rgba(255,161,181,1);
+		}
+		#div-all{
+			border: 0px solid #FFFFFF;
+		}
+		#ratio-txt{
+			border: 0px solid #FFFFFF;
+		}
+		#ul-bel{
+			border: 0px solid #FFFFFF;
+		}
+		#net-traff-txt{
+			border: 0px solid #FFFFFF;
+		}
+		#txt-ratio{
+			border: 0px solid #FFFFFF;
+			padding: 0;
+			width: 75px;
+		}
+		.collection txt-ratio{
+			border: 0px solid #FFFFFF;
+		}
+		body{
+		    background-color: #f5f5f5;
+		}
+		.collection.txt-ratio{
+			width: 80px;
+		}
+
+      
+	</style>
+	<script>
+
+//-----------------------------------Document-------------------------------------------	
+		$(document).ready(function(){
+			$('.parallax').parallax();
+			$('.collapsible').collapsible({
+				accordion : false 
+			});
+			$('.button-collapse').sideNav({
+				menuWidth: 500, 
+				edge: 'right',
+				closeOnClick: true 
+			});  
+
+//-----------------------------------Ajax data-------------------------------------------
+			var url ="https://sheetsu.com/apis/v1.0/42921e2f46c4?fields=time,traffic_ratio,traffic_sw4503";
+			function get(){
+			    return $.ajax({ 
+			        type: 'GET', 
+			        url: url,
+			        async: false,
+					success:function(data){
+						console.log('Get Ajax Success')
+					}
+			    });
+			}
+			var data  = get();
+			var obj   = jQuery.parseJSON(data['responseText']);
+			var count = 12;
+			var avgIn = 0;
+			var avgOut= 0;
+			var ratio = '';
+			var start = obj.length-13;
+			var label    = [],
+				inbound  = [],
+				outbound = [];
+
+			sendData();
+			function sendData(){
+				if(count > 0){
+					start+=1
+
+					console.log(obj[start]['time'])	
+
+					count-=1;
+					sendData();
+				}
+			}
+			
+
+
+		});
+	</script>
+
+</head>
+<body>
+	
+</body>
+</html>
+

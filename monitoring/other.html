@@ -1,0 +1,35 @@
+//-----------------------------------Ajax data-------------------------------------------
+		/*	var url ="https://sheetsu.com/apis/v1.0/461c56b32f53?fields=time,interface,traffic_interface";
+			function get(){
+			    return $.ajax({ 
+			        type: 'GET', 
+			        url: url,
+			        async: false,
+					success:function(data){
+						console.log('Get Ajax Success')
+					}
+			    });
+			}
+			var data  = get();
+			var obj   = jQuery.parseJSON(data['responseText']);
+			var count = 12;
+			var avgIn = 0;
+			var avgOut= 0;
+			var start = obj.length-12;
+			var label    = [],
+				inbound  = [],
+				outbound = [];
+
+			sendData();
+			function sendData(){
+				if(count > 0){ 
+					label.push(obj[start]['time']);	
+					start+=1;
+					count-=1;
+					sendData();
+				}
+			}
+			var interface_obj = jQuery.parseJSON(obj[(obj.length-1)]['interface'])
+			console.log(interface_obj)*/
+		
+//-----------------------------------On Click------------------------------------------

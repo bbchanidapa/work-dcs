@@ -1,0 +1,32 @@
+[
+	{
+		"id" : "01",
+		"name" :"Alfesd",
+		"city" : "Berlin",
+		"country" : "Germany"
+	},
+	{
+		"id" : "02",
+		"name" :"Berglund",
+		"city" : "Lulea",
+		"country" : "Sweden"
+	},
+	{
+		"id" : "03",
+		"name" :"Centro",
+		"city" : "Mexico D.F",
+		"country" : "Mexico"
+	},
+	{
+		"id" : "04",
+		"name" :"Ernst",
+		"city" : "Graz",
+		"country" : "Austria"
+	},
+	{
+		"id" : "05",
+		"name" :"Galer",
+		"city" : "Berlin",
+		"country" : "Germany"
+	}
+]

@@ -1,0 +1,215 @@
+<html>
+<head>
+	<title>Home</title>
+	<meta charset="UTF-8">
+	<!-- script jquery -->
+	<script src="//code.jquery.com/jquery.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<!-- Compiled and minified CSS -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
+	<!-- Compiled and minified JavaScript -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
+
+	<!--Import Google Icon Font-->
+	<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<!--Import materialize.css-->
+	<link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+	<!-- import plugin script -->
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js'></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/excanvas.js'></script>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+	<!--Let browser know website is optimized for mobile-->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
+
+	<style>
+		html { font-family: GillSans, Calibri, Trebuchet, sans-serif;}  
+		.parallax-container {
+		height: "your height here";	
+	    }
+	    #left{
+			height: 500px;		
+		}
+		#center{
+			position:relative;
+			height: 500px;		
+		}
+		#right-top{
+			position:relative;
+			height: 350px;		
+		}
+		#right-down{
+			position:relative;
+			height: 150px;		
+		}
+		#trafficeSw4503{
+			position:relative;
+			width: 100%;		
+		}
+		.ilike-blue-container {
+			@extend .blue-text, .text-lighten-4;
+		}
+		.ilike-blue-container {
+			@extend .blue, .lighten-4;
+		}
+     
+      
+	</style>
+	<script>
+		$(document).ready(function(){
+			$('.parallax').parallax();
+			$('.collapsible').collapsible({
+				accordion : false 
+			});
+			$('.button-collapse').sideNav({
+				menuWidth: 300, 
+				edge: 'right',
+				closeOnClick: true 
+			});  
+			$('.carousel').carousel();
+			// Pause slider
+			$('.slider').slider('pause');
+			// Start slider
+			$('.slider').slider('start');
+			// Next slide
+			$('.slider').slider('next');
+			// Previous slide
+			$('.slider').slider('prev');
+
+			// line chart data
+			var buyerData = {
+			labels : ["9.00","10.00","11.00","12.00","13.00","14.00","15.00","16.00"],/*Time*/
+			datasets : [
+			{
+				fillColor : "rgba(0,0,255,0.3)",
+				strokeColor : "#0066FF",
+				pointColor : "#0066FF",
+				pointStrokeColor : "#0066FF",
+				data : [100,156,99,251,180,163,222,210]
+			},
+			{
+				fillColor : "rgba(218,123,95,0.3)",
+				strokeColor : "#DA7B5F",
+				pointColor : "#DA7B5F",
+				pointStrokeColor : "#DA7B5F",
+				data : [255,250,290,250,210,199,230,220]
+			}
+			]
+			}
+			// get line chart canvas
+			var trafficeSw4503 = document.getElementById('trafficeSw4503').getContext('2d');
+			// draw line chart
+			new Chart(trafficeSw4503).Line(buyerData);
+
+	
+
+		});
+	</script>
+
+</head>
+<body>
+
+	<!-- Dropdown Structure -->
+	<ul id="device" class="dropdown-content">
+		<li><a href="#!">Sw4503</a></li>
+		<li><a href="#!">R124</a></li>
+		<li><a href="#!">R101C</a></li>
+		<li><a href="#!">R330A</a></li>
+		<li><a href="#!">R401</a></li>
+		<li><a href="#!">R415</a></li>
+	</ul>
+	<nav> <!--Navbar-->
+		<div class="nav-wrapper  light-blue darken-4">
+	        <a href="#!" class="brand-logo">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp  FITM Monitoring v1.0</a>
+			<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+			<ul class="right hide-on-med-and-down ">
+				<li><a href="sass.html">Dashboard</a></li>
+				<!-- Dropdown Trigger -->
+				<li><a class="dropdown-button" href="#!" data-activates="device">Device<i class="material-icons right">arrow_drop_down</i></a></li>
+				<li><a href="collapsible.html">Interface</a></li>
+				<li><a href="mobile.html">Top 10 Ranking</a></li>
+				<li><a href="mobile.html">Event</a></li>
+				<li><a href="mobile.html">Network</a></li>
+			
+				&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+				&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+				&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+				&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+				&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+				&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+				&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+				&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+				&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+			</ul>
+			<ul class="side-nav" id="mobile-demo">
+				<li><a href="sass.html">Dashboard</a></li>
+				<li><a href="collapsible.html">Device</a></li>
+				<li><a href="collapsible.html">Interface</a></li>
+				<li><a href="mobile.html">Top 10 Ranking</a></li>
+				<li><a href="mobile.html">Event</a></li>
+				<li><a href="mobile.html">Network</a></li>
+			</ul>
+		</div>
+	</nav>
+
+	<div class="container">
+		<div class="row">
+				<div class="col s12 m3 l2" id="left">
+					<ul class="collection">
+							<li class="collection-item avatar">
+								<img src="images/yuna.jpg" alt="" class="circle">
+								<span class="title">Title</span>
+								<p>First Line </p>
+								<a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+							</li>
+							<li class="collection-item avatar">
+								<i class="material-icons circle">folder</i>
+								<span class="title">Title</span>
+								<p>First Line	</p>
+								<a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+							</li>
+							<li class="collection-item avatar">
+								<i class="material-icons circle green">insert_chart</i>
+								<span class="title">Title</span>
+								<p>First Line <br>
+								Second Line
+								</p>
+								<a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+							</li>
+							<li class="collection-item avatar">
+								<i class="material-icons circle red">play_arrow</i>
+								<span class="title">Title</span>
+								<p>First Line <br>
+								Second Line
+								</p>
+								<a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+							</li>
+					</ul>
+					   <ul class="collection">
+      <li class="collection-item">
+<i class="material-icons ">insert_chart</i>
+      Alvin</li>
+      <li class="collection-item">Alvin</li>
+      <li class="collection-item">Alvin</li>
+      <li class="collection-item">Alvin</li>
+    </ul>
+				</div>
+				<div class="card-panel col s12 m9 l6" id="center">
+				    <!-- line chart canvas element -->
+						<canvas id="trafficeSw4503" width="600" height="400"></canvas>
+				</div>
+				<div>
+					
+				</div>
+				<div class="card-panel col s12 m8 l4" id="right-top">
+					<span class="blue-text text-darken-2">This is a card panel with dark blue text</span>
+				</div>
+				<div class="card-panel col s12 m3 l4" id="right-down">
+					<span class="blue-text text-darken-2">This is a card panel with dark blue text</span>
+				</div>
+		
+		</div>
+	</div>
+
+</body>
+</html>
+

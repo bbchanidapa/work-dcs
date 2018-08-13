@@ -1,0 +1,15 @@
+{"employees":[
+    {"firstName":"John", "lastName":"Doe"},
+    {"firstName":"Anna", "lastName":"Smith"},
+    {"firstName":"Peter", "lastName":"Jones"}
+]}
+/* GET JSON to CONSOLE
+	$.ajax({
+        	url: "http://localhost/script/query.json",
+        	dataType: "json", 
+        	success: function(){
+        		var json = $.getJSON( "query.json");
+        	 	console.log(json);
+        	}
+
+    });*/

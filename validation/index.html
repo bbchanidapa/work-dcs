@@ -1,0 +1,32 @@
+ <html ng-app>
+    <head>
+  <!-- load bootstrap and fontawesome via CDN -->
+      <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" />
+      <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" />
+  <!-- load angular and angular route via CDN -->
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
+          <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
+    
+    <style>
+      input.ng-invalid{
+        border: 1px solid red;
+      }
+    </style>
+    </head>
+    <body>
+
+        <div class="container">
+        <h3>Form Validation</h3>
+      <form name="userForm">
+         <span ng-show="userForm.name.$error.required&&!userForm.name.$pristine">Name is required</span>
+        <input type="text" class="form-control" ng-model="user.name" required name="name" />
+
+         <span ng-show="userForm.email.$error.required&&!userForm.email.$pristine">email is required</span>
+         <span ng-show="userForm.email.$error.email">Email is invalid</span>
+        <input type="email" class="form-control" ng-model="user.email" required name="email" />
+      </form>
+         
+        </div>
+
+ </body>
+    </html>

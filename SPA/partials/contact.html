@@ -1,0 +1,9 @@
+<!-- contact.html -->
+    <div class="jumbotron text-center">
+        <h1>Contact Page</h1>
+
+        <p>{{ message }}</p>
+      <ul ng-repeat="c in contact">
+      	<li ><a href="#/contact/{{c.id}}">{{c.name}}</a></li>
+      </ul>
+    </div>

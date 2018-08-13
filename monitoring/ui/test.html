@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<script src="//code.jquery.com/jquery.min.js"></script>
+		<!-- script jquery -->
+	<script src="//code.jquery.com/jquery.min.js"></script>
+	<!-- Compiled and minified CSS -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
+	<!-- Compiled and minified JavaScript -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
+	<!--Import Google Icon Font-->
+	<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+	<!-- import plugin script -->
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js'></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/excanvas.js'></script>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+	<!--Let browser know website is optimized for mobile-->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
+		<style>
+		html { font-family: GillSans, Calibri, Trebuchet, sans-serif;}  
+		.parallax-container {
+		height: "your height here";	
+	    }
+		.chart{
+		  vertical-align: middle;
+		  width: 100%;
+		  margin: 0 auto; 
+		  position: relative;
+		  display: inline-block;
+		}
+		.tabs .indicator{
+			background-color: #0089ec ;
+		}
+		.collection .collection-item.avatar {
+			min-height: 60px;
+		}
+		.row .col {
+			padding: 0 0rem;
+		}
+		.collection a.collection-item {
+			color: #607d8b;
+		}
+		.collection .collection-item {
+   			line-height: 2rem; 
+   			padding: 0px 0px;
+		}
+		.dropdown-content li>span {
+			font-size: 13px;
+			
+		}
+		.select-dropdown li img { 
+			height: 30px;
+    		width: 30px;
+		}
+	</style>
+	<script>
+		var url ="https://sheetsu.com/apis/v1.0/bd7ff5cf7ac9?fields=time,interface,traffic_toInterface";//,status
+			function get(){
+			    return $.ajax({ 
+			        type: 'GET', 
+			        url: url,
+			        async: false,
+					success:function(data){
+						console.log('Get Ajax Success')
+					}
+			    });
+			}
+			var data  = get();
+			var obj   = jQuery.parseJSON(data['responseText']);
+			var count = 12;
+			var avgIn = 0;
+			var avgOut= 0;
+			var start = obj.length-12;
+			var label    = [],
+				inbound  = [],
+				outbound = [];
+
+			sendData();
+			function sendData(){
+				if(count > 0){ 
+					label.push(obj[start]['time']);	
+					start+=1;
+					count-=1;
+					sendData();
+				}
+			}
+			var traffic_link_obj = jQuery.parseJSON(obj[(obj.length-1)]['traffic_toInterface'])
+			console.log(traffic_link_obj)
+			$(document).ready(function(){
+				
+				for(var host in traffic_link_obj){
+					
+						for(var index in traffic_link_obj[host]['interface']){
+							console.log(traffic_link_obj[host]['inbound'][index])
+							var li = $('<li></li>');
+							var txt = '';
+							li.attr('id',index);
+							txt += traffic_link_obj[host]['interface'][index]
+							if(traffic_link_obj[host]['inbound'][index] != undefined && traffic_link_obj[host]['inbound'][index] != undefined){
+								txt+= traffic_link_obj[host]['inbound'][index]+'::'+traffic_link_obj[host]['outbound'][index]
+							}
+							
+							
+							li.html(txt)
+							$('body').append(li);
+					
+						}		
+				}
+			});
+	</script>		
+</head>
+<body>
+<div id="sw4503">
+	
+</div>
+</body>
+</html>
+
+<!-- 
+	<div class="container">
+		<div class="row">
+			
+			    <div class="col s12">
+			      <ul class="tabs">
+			        <li class="tab col s3"><a href="#SW4503" class="blue-text text-darken-2" id="SW4503_tab">SW4503</a></li>
+			        <li class="tab col s3"><a href="#R124" class="blue-text text-darken-2" id="R124_tab">R124</a></li>
+			        <li class="tab col s3"><a href="#R101C" class="blue-text text-darken-2" id="R101C_tab">R101C</a></li>
+			        <li class="tab col s3"><a href="#R330A" class="blue-text text-darken-2" id="R330A_tab">R330A</a></li>
+			        <li class="tab col s3"><a href="#R401" class="blue-text text-darken-2" id="R401_tab">R401</a></li>
+			        <li class="tab col s3"><a href="#R415" class="blue-text text-darken-2" id="R415_tab">R415</a></li>		
+			        </div>
+			      </ul>
+			    </div>
+			    <div id="SW4503" class="col l12">
+				    <div class="row col s12 m3 l2">
+						<div class="input-field col s12 m3 l2" >
+							<select class='icons col s12 m3 l12 ' id="list-SW4503" >	
+							  <option value="" disabled selected>Choose your Interface</option>
+							</select>
+							<label>Interface Sw4503 </label>
+					    </div>
+					</div>
+				</div>
+			    <div id="R124" class="col s12 m3 l12">
+			     	<div class="row col s12 m3 l2">
+						<div class="input-field col s12 m3 l2" >
+							<select class='icons col s12 m3 l12 ' id="list-R124" >	
+							  <option value="" disabled selected>Choose your Interface</option>
+							</select>
+							<label>Interface R124 </label>
+					    </div>
+					</div>
+			    </div>
+			    <div id="R101C" class="col s12"> 
+				<div class="row col s12 m3 l2">
+					<div class="input-field col s12 m3 l2" >
+							<select class='icons col s12 m3 l12 ' id="list-R101C" >	
+							  <option value="" disabled selected>Choose your Interface</option>
+							</select>
+							<label>Interface R101C </label>
+					    </div>
+					</div>
+			    </div>
+			    <div id="R330A" class="col s12">
+			   		<div class="row col s12 m3 l2">
+					    <div class="input-field col s12 m3 l2" >
+							<select class='icons col s12 m3 l12 ' id="list-R330A" >	
+							  <option value="" disabled selected>Choose your Interface</option>
+							</select>
+							<label>Interface Sw4503 </label>
+					    </div>
+					</div>
+			    </div>
+				<div id="R401" class="col s12">
+					<div class="row col s12 m3 l2">
+					    <div class="input-field col s12 m3 l2" >
+							<select class='icons col s12 m3 l12 ' id="list-R401" >	
+							  <option value="" disabled selected>Choose your Interface</option>
+							</select>
+							<label>Interface R401 </label>
+					    </div>
+					</div>
+				</div>
+			    <div id="R415" class="col s12">
+					<div class="row col s12 m3 l2">
+					    <div class="input-field col s12 m3 l2" >
+							<select class='icons col s12 m3 l12 ' id="list-R415" >	
+							  <option value="" disabled selected>Choose your Interface</option>
+							</select>
+							<label>Interface R415 </label>
+					    </div>
+					</div>
+					
+			    </div>
+
+	  </div>row
+	</div>container
+
+</body>
+</html> -->
+    		
+<!-- 			var length1 = interface_obj['10.77.4.1'].length,
+	length2 = interface_obj['10.77.1.2'].length,
+	length3 = interface_obj['10.77.6.2'].length,
+	length4 = interface_obj['10.77.3.2'].length,
+	length5 = interface_obj['10.77.4.2'].length,
+	length6 = interface_obj['10.77.5.2'].length;
+	console.log(length1)
+for(var i = 0; i < length1; i++){
+	var nameInterface = $("<option data-icon='../img/rj_blue.png' class='left circle'></option>");
+	var str = interface_obj['10.77.4.1'][i];
+	var txt = str.substr(1,(str.length-2));
+
+	nameInterface.attr('id','sw4503-'+i)
+	nameInterface.html(txt)
+	$('#list-SW4503').append(nameInterface)
+}
+for(var i = 0; i < length2; i++){
+	var nameInterface = $("<option data-icon='../img/rj_blue.png' class='left circle'></option>");
+	var str = interface_obj['10.77.1.2'][i];
+	var txt = str.substr(1,(str.length-2));
+
+	nameInterface.attr('id','r124-'+i)
+	nameInterface.html(txt)
+	$('#list-R124').append(nameInterface)
+}
+for(var i = 0; i < length3; i++){
+	var nameInterface = $("<option data-icon='../img/rj_blue.png' class='left circle'></option>");
+	var str = interface_obj['10.77.6.2'][i];
+	var txt = str.substr(1,(str.length-2));
+
+	nameInterface.attr('id','r101c-'+i)
+	nameInterface.html(txt)
+	$('#list-R101C').append(nameInterface)
+}
+for(var i = 0; i < length4; i++){
+	var nameInterface = $("<option data-icon='../img/rj_blue.png' class='left circle'></option>");
+	var str = interface_obj['10.77.3.2'][i];
+	var txt = str.substr(1,(str.length-2));
+
+	nameInterface.attr('id','r330a-'+i)
+	nameInterface.html(txt)
+	$('#list-R330A').append(nameInterface)
+}
+for(var i = 0; i < length5; i++){
+	var nameInterface = $("<option data-icon='../img/rj_blue.png' class='left circle'></option>");
+	var str = interface_obj['10.77.4.2'][i];
+	var txt = str.substr(1,(str.length-2));
+
+	nameInterface.attr('id','r401-'+i)
+	nameInterface.html(txt)
+	$('#list-R401').append(nameInterface)
+}
+for(var i = 0; i < length6; i++){
+	var nameInterface = $("<option data-icon='../img/rj_blue.png' class='left circle'></option>");
+	var str = interface_obj['10.77.5.2'][i];
+	var txt = str.substr(1,(str.length-2));
+
+	nameInterface.attr('id','r415-'+i)
+	nameInterface.html(txt)
+	$('#list-R415').append(nameInterface)
+}
+
+		 $('select').material_select(); -->
+		

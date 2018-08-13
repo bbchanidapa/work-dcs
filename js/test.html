@@ -1,0 +1,27 @@
+<!DOCTYPE html>  
+<html ng-app>  
+  <head>  
+    <meta charset="utf-8" />    
+   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.17/angular.min.js"></script>
+
+    <title>My Learn AngularJs 2</title>   
+  </head>  
+  <body ng-init="names=[
+        {'name': 'bb','sur':'eiei'},
+        {'name': 'mark','sur':'koy'}
+    ]">  
+  
+    <h2>Angular</h2>  
+    <div class="container" >  
+    <input type="text" class="form-control" ng-model="query.name">
+     <table class="table">
+       <tr ng-repeat="a in names | filter:query">
+         <td>{{a.name}}</td>
+         <td>{{a.sur}}</td>
+       </tr>
+     </table>
+    </div>   
+  
+      
+  </body>  
+</html>  

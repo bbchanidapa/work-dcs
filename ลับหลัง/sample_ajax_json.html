@@ -1,0 +1,56 @@
+<script src="/js/jquery-1.12.4.min.js"></script>
+<script>
+    
+    //$(document).ready(function() {
+    //    $.ajax({
+    //        url: "http://localhost/html/sample_ajax_json_data.json",
+    //        method: "get",
+    //        data: {
+    //            class: "2014"
+    //        },
+    //    }).done(function(data) {
+    //        console.log(JSON.parse(data));
+    //        console.log('Done!');
+    //    });
+    //});
+
+////////////
+    
+    function ajaxRequest(_method,_data) {
+        return $.ajax({
+            url: "http://localhost/html/sample_ajax_json_data.json",
+            method: _method,
+            data: _data
+        });
+    }
+    //
+    //ajaxRequest("get",{class:"2016"}).done(function(data) {
+    //    console.log("Done!");
+    //    data = JSON.parse(data);
+    //    for(var i=0;i<data.students.length;i++) {
+    //        var item = $("<li></li>");
+    //        item.html(data.students[i].name);
+    //        item.attr('data-id',data.students[i].id);
+    //        $('body').append(item);
+    //    }
+    //    
+    //    console.log(1);
+    //    
+    //});
+    //
+    //
+    //console.log(2);
+    //
+    //$('li[data-id=12]').remove();
+    //
+    //console.log(3);
+    //
+    //
+        
+///////////////
+        
+    $.when(ajaxRequest("get",{class:"2015"}),ajaxRequest("post",{class:"2016"})).then(function() {
+        console.log('all done');
+    })
+    
+</script>

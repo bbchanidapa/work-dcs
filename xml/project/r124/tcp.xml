@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<SnmpSimulatorData>
+<Instances
+>
+<!-- tcpRtoAlgorithm.0 -->
+<Instance
+name="tcpRtoAlgorithm.0"
+oid=".1.3.6.1.2.1.6.1.0"
+valueType="Integer"
+>
+<Value><![CDATA[vanj (4)]]></Value>
+</Instance>
+<!-- tcpRtoMin.0 -->
+<Instance
+name="tcpRtoMin.0"
+oid=".1.3.6.1.2.1.6.2.0"
+valueType="Integer"
+>
+<Value><![CDATA[300]]></Value>
+</Instance>
+<!-- tcpRtoMax.0 -->
+<Instance
+name="tcpRtoMax.0"
+oid=".1.3.6.1.2.1.6.3.0"
+valueType="Integer"
+>
+<Value><![CDATA[60000]]></Value>
+</Instance>
+<!-- tcpMaxConn.0 -->
+<Instance
+name="tcpMaxConn.0"
+oid=".1.3.6.1.2.1.6.4.0"
+valueType="Integer"
+>
+<Value><![CDATA[-1]]></Value>
+</Instance>
+<!-- tcpActiveOpens.0 -->
+<Instance
+name="tcpActiveOpens.0"
+oid=".1.3.6.1.2.1.6.5.0"
+valueType="Counter32"
+>
+<Value><![CDATA[0]]></Value>
+</Instance>
+<!-- tcpPassiveOpens.0 -->
+<Instance
+name="tcpPassiveOpens.0"
+oid=".1.3.6.1.2.1.6.6.0"
+valueType="Counter32"
+>
+<Value><![CDATA[5832]]></Value>
+</Instance>
+<!-- tcpAttemptFails.0 -->
+<Instance
+name="tcpAttemptFails.0"
+oid=".1.3.6.1.2.1.6.7.0"
+valueType="Counter32"
+>
+<Value><![CDATA[0]]></Value>
+</Instance>
+<!-- tcpEstabResets.0 -->
+<Instance
+name="tcpEstabResets.0"
+oid=".1.3.6.1.2.1.6.8.0"
+valueType="Counter32"
+>
+<Value><![CDATA[64]]></Value>
+</Instance>
+<!-- tcpCurrEstab.0 -->
+<Instance
+name="tcpCurrEstab.0"
+oid=".1.3.6.1.2.1.6.9.0"
+valueType="Gauge"
+>
+<Value><![CDATA[0]]></Value>
+</Instance>
+<!-- tcpInSegs.0 -->
+<Instance
+name="tcpInSegs.0"
+oid=".1.3.6.1.2.1.6.10.0"
+valueType="Counter32"
+>
+<Value><![CDATA[31115]]></Value>
+</Instance>
+<!-- tcpOutSegs.0 -->
+<Instance
+name="tcpOutSegs.0"
+oid=".1.3.6.1.2.1.6.11.0"
+valueType="Counter32"
+>
+<Value><![CDATA[28091]]></Value>
+</Instance>
+<!-- tcpRetransSegs.0 -->
+<Instance
+name="tcpRetransSegs.0"
+oid=".1.3.6.1.2.1.6.12.0"
+valueType="Counter32"
+>
+<Value><![CDATA[12]]></Value>
+</Instance>
+<!-- tcpInErrs.0 -->
+<Instance
+name="tcpInErrs.0"
+oid=".1.3.6.1.2.1.6.14.0"
+valueType="Counter32"
+>
+<Value><![CDATA[0]]></Value>
+</Instance>
+<!-- tcpOutRsts.0 -->
+<Instance
+name="tcpOutRsts.0"
+oid=".1.3.6.1.2.1.6.15.0"
+valueType="Counter32"
+>
+<Value><![CDATA[1848]]></Value>
+</Instance>
+</Instances>
+</SnmpSimulatorData>

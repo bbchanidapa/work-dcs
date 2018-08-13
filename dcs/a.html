@@ -1,0 +1,88 @@
+<script type="text/javascript">
+	var array = [1,2,3,4,5];
+	var index = array.indexOf(4);
+	console.log(index);
+	array.splice(index, 1);
+	for(var c = 0;c < array.length; c++ ){
+		console.log(array[c],array.indexOf(array[c]));
+	}
+
+</script>
+<!-- <!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<style type="text/css">
+		body {margin:0; padding:40px;}
+		#main {
+			background: lightsalmon;
+			height:400px;
+			width:400px;
+			position: relative;
+		}
+		#a1{
+			background: lightslategray;
+			height:50px;
+			width:50px;
+			top:50px;left:50px;
+			position: absolute;
+		}
+		#a2{
+			background: lightslategray;
+			height:50px;
+			width:50px;
+			top:100px;left:150px;
+			position: absolute;
+		}
+	</style>
+	<script type="text/javascript">
+	$(document).ready(main);
+		var mode = "",count="";
+		function main() {
+			$('#create').on('click', function() {
+				console.log('create');
+				mode = 'create';
+				$('#main').on('click', action);
+			});
+			$('#delete').on('click', function() {
+				console.log('delete');
+		    	mode = 'delete';
+		    	$('#main').one('click', action);
+				$('.chair').on('click', function() {
+					$( this ).remove();
+					console.log('del()');
+				})
+			});
+
+		}
+		function action() {
+			$('h1').html(mode);
+			console.log('action',mode);
+			if(mode == 'create'){
+				var x        = event.clientX - 25,
+					y   	 = event.clientY- 25,
+					point 	 = $('#main').position(),
+					parent = $("#main"),
+					chair 	 = $('<img class="chair">'),
+					fileName = "img/img1.png";
+				chair.attr('src',fileName);
+				chair.css({'height': '50px' });
+				chair.attr('id','chair-'+x+y);
+				chair.css({'position':'absolute'});
+				chair.offset({  top: (y-parent.offset().top),left:(x-parent.offset().left)});
+				$("#main").append(chair);
+			}
+		}
+	</script>
+</head>
+<body>
+<h1>Header</h1>
+<div id="main">
+	<div class="chair" id="a1">div 1</div>
+	<div class="chair" id="a2">div 2</div>
+</div>
+<input type="button" value="Create" id="create">
+<input type="button" value="Delete" id="delete">
+</body>
+</html> -->

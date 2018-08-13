@@ -1,0 +1,62 @@
+<html>
+<head><title>Hello All </title>
+<script language="javascript" type="text/javascript" src="js/jquery.min.js"></script>
+<script language="javascript" type="text/javascript" src="js/jqplot/jquery.jqplot.min.js"></script>
+<link rel="stylesheet" type="text/css" href="js/jqplot/jquery.jqplot.css" />
+<script type='text/javascript' src='js/jqplot/plugins/jqplot.pieRenderer.js'></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+ <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+ <link rel="stylesheet" href="/resources/demos/style.css">
+ <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+  <script>
+  $( function() {
+    var data1=[[1, 2],[3,5],[5,13]];
+    var data2=[[1, 1],[2,4], [3,9]];
+    $.jqplot('div_report',  [data1,data2],
+        { title:'Line',
+        axes:{yaxis:{min:-10, max:240}},
+        legend:{  labels: ['Data 1','Data 2'],
+        show:true},
+        animate: true,
+        series:[{color:'#5FAB78'}]
+    });
+    $( "#slider-range-min" ).slider({
+        range: "min",
+        value: 1,
+        min: 1,
+        max: 700,
+        slide: function( event, ui ) {
+          $( "#amount" ).val( ui.value );
+          $( "#div_report" ).hide();
+          var dat1=[[1, 5],[3,15],[5,23]];
+          var dat2=[[1, 8],[2,9], [3,10]];
+          $.jqplot('div_report',  [dat1,dat2],
+          { title:'Line',
+              axes:{yaxis:{min:-10, max:240}},
+              legend:{
+                labels: ['Data 1','Data 2'],
+                show:true,
+                animate: true,
+              },
+              series:[{color:'#5FAB78'}]
+          });
+          $( "#div_report" ).show();
+        }//slider
+    });
+    $( "#amount" ).val(  $( "#slider-range-min" ).slider( "value" ) );
+
+  } );
+  </script>
+</head>
+<body>
+<div id="div_report" style="height:300px;width:400px; "></div>
+
+<p>
+  <label for="amount">Maximum:</label>
+  <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+</p>
+<div id="slider-range-min"></div>
+
+
+</body>
+</html>

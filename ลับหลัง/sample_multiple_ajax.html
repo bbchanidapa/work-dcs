@@ -1,0 +1,22 @@
+<script src="/js/jquery-1.12.4.min.js"></script>
+<script>
+    function getProductId(pid,suffix) {
+        return $.ajax({
+                url: 'http://localhost/html/sample_ajax/sample_ajax_db_backend.php'+suffix,
+                data: {
+                    list: 'products',
+                    id: pid
+                },
+                method: 'get'
+            }).done(function(data) {
+                console.log(data);
+                $('#result').append($("<li>"+data+"</li>"));
+            });
+    }
+
+    $.when(getProductId(36,""),getProductId(37,""),getProductId(38,"123")).then(function() {
+        alert('success');
+    });
+
+</script>
+<div id="result"></div>

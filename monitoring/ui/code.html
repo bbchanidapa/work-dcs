@@ -1,0 +1,88 @@
+		/*	for(var host in inbound){
+				for(var index in inbound[host]){
+					if(click == index){
+						if(host == ip){*/
+							console.log('inbound',index,inbound[ip][index])
+							console.log('outbound',index,outbound[ip][index])
+							canvas.attr('id',"LineChart"+index)
+							canvas.attr('class',"chart")
+							var link = '#'+index+'_chart'//'#'+tab.substr(4,tab.length)+'_chart'
+							console.log(link)
+							$(link).html(canvas)
+							chart("LineChart"+index,inbound[ip][index],outbound[ip][index])		
+						/*}//if		
+					}//if
+								
+				}//for
+			}//for*/
+
+
+
+						
+/*			function sendData(){
+				if(count_ > 0){ 
+					label.push(obj[start]['time']);	
+					var traffic_obj = jQuery.parseJSON(obj[(start)]['traffic_toInterface'])
+
+					for(var host in traffic_obj){
+						if(!(key in inbound) || !(key in outbound)){
+							inbound[host] = []
+							outbound[host] = []
+						}//if
+						for(var key in traffic_obj[host]['inbound']){
+							if(!(key in inbound[host]) || !(key in outbound[host])){
+								inbound[host][key] = []
+								outbound[host][key] = []
+								inbound[host][key].push(traffic_obj[host]['inbound'][key])
+								outbound[host][key].push(traffic_obj[host]['outbound'][key])
+							}else{
+								inbound[host][key].push(traffic_obj[host]['inbound'][key])
+								outbound[host][key].push(traffic_obj[host]['outbound'][key])	
+							}
+							
+							
+						}//for
+			
+						
+					}//for
+
+					start+=1;
+					count_-=1;
+					sendData();	
+				}//if
+			}//func
+			console.log(inbound,outbound)*/
+
+
+
+
+
+			/*function sendData(){
+				if(count_ > 0){ 
+					label.push(obj[start]['time']);	
+					var traffic_obj = jQuery.parseJSON(obj[(start)]['traffic_toInterface'])
+
+					for(var host in traffic_obj){
+						if(!(key in traffic)){
+							traffic[host] = []
+							var ins = [],
+								outs = [];
+							
+							for(var key in traffic_obj[host]['inbound']){
+								//console.log(host,key)
+								ins[key]=traffic_obj[host]['inbound'][key]
+								outs[key]=traffic_obj[host]['outbound'][key]
+							}//for
+
+							inbound[host] = ins
+							outbound[host] = outs
+							add(inbound,outbound)
+							//console.log(ins,outs)
+						}//if
+					}//for
+
+					start+=1;
+					count_-=1;
+					sendData();	
+				}//if
+			}//func*/

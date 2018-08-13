@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+		<meta charset="utf-8" />
+		<title>Chart.js demo</title>
+		<!-- import plugin script -->
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js'></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+		<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+		<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js'></script>
+		<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js'></script>
+	<!--     <script language="javascript" type="text/javascript" src="dist/excanvas.js"></script>
+    <script language="javascript" type="text/javascript" src="dist/jquery.min.js"></script>
+    <script language="javascript" type="text/javascript" src="dist/jquery.jqplot.min.js"></script> -->
+			<script type="text/javascript">
+			$(document).ready(function(){
+				var ctx = document.getElementById("myLineChart");
+				var data = {
+    labels: ["R124", "R330A", "R401", "R415", "R101C"],
+     datasets: [
+        {
+            label: "Inbound",
+            backgroundColor: [
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(54, 162, 235, 0.2)'
+            ],
+            borderColor: [
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(54, 162, 235, 1)'
+            ],
+            borderWidth: 1,
+            data: [123, 120, 187, 211, 150]
+        },
+        {
+            label: "Outbound",
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(255, 99, 132, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255,99,132,1)',
+                'rgba(255,99,132,1)',
+                'rgba(255,99,132,1)',
+                'rgba(255,99,132,1)',
+                'rgba(255,99,132,1)',
+                'rgba(255,99,132,1)'
+            ],
+            borderWidth: 1,
+            data: [98, 75, 110, 79, 86]
+        }
+    ]
+};
+				var myLineChart = new Chart(ctx, {
+					type: 'bar',
+					data: data
+				});
+
+			});
+		</script>
+    </head>
+<body>
+    <!-- line chart canvas element -->
+    <canvas id="myLineChart" width="600" height="400"></canvas>
+</body>
+</html>

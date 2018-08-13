@@ -1,0 +1,486 @@
+<html>
+<head>
+	<title>Device</title>
+	<meta charset="UTF-8">
+	<!-- script jquery -->
+	<script src="//code.jquery.com/jquery.min.js"></script>
+	<!-- Compiled and minified CSS -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
+	<!-- Compiled and minified JavaScript -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
+	<!--Import Google Icon Font-->
+	<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+	<!-- import plugin script -->
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js'></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/excanvas.js'></script>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+	<!--Let browser know website is optimized for mobile-->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+	<style>
+		html { font-family: GillSans, Calibri, Trebuchet, sans-serif;}  
+		.parallax-container {
+		height: "your height here";	
+	    }
+	    #top{
+			height: 50px;		
+		}
+		#left{
+			height: 500px;		
+		}
+		#center{
+			position:relative;
+			height: 500px;		
+		}
+		#right-top{
+			position:relative;
+			height: 500px;		
+		}
+		#trafficeSw4503{
+			position:relative;
+			width: 100%;		
+		}
+		#countries{
+			position:relative;
+			width: 100%;
+		} 
+		body{
+		    background-color: #f5f5f5;
+		}
+		.chart{
+		  vertical-align: middle;
+		  width: 100%;
+		  margin: 0 auto; 
+		  position: relative;
+		  display: inline-block;
+
+		}
+		/* ------------ net traff ---------- */
+		#inbound{
+			position:relative;
+			background: rgba(54,162,235,1);
+		}
+		#outbound{
+			position:relative;
+			background: rgba(255,161,181,1);
+		}
+		#div-all{
+			border: 0px solid #FFFFFF;
+		}
+	
+		#net-traff-txt{
+			border: 0px solid #FFFFFF;
+		}
+		#bel{
+			border: 0px;
+			/* width: 75px; */
+			padding-left: 10px;
+			padding-right: 10px;
+		}
+		#txt{
+			border: 0px;
+			width: 75px;
+			padding-left: 0px;
+			padding-right: 0px;
+		}
+
+	</style>
+	<script>
+
+//-----------------------------------Document-------------------------------------------	
+		$(document).ready(function(){
+			$('.parallax').parallax();
+			$('.collapsible').collapsible({
+				accordion : false 
+			});
+			$('.button-collapse').sideNav({
+				menuWidth: 500, 
+				edge: 'right',
+				closeOnClick: true 
+			});  
+			$('.carousel').carousel();
+//-----------------------------------Ajax data-------------------------------------------
+			var url ="https://sheetsu.com/apis/v1.0/feb4c5bd6a70?fields=time,detail,traffic_device";
+			function get(){
+			    return $.ajax({ 
+			        type: 'GET', 
+			        url: url,
+			        async: false,
+					success:function(data){
+						console.log('Get Ajax Success')
+					}
+			    });
+			}
+			var data  = get();
+			var obj   = jQuery.parseJSON(data['responseText']);
+			var index = obj.length-1;
+			var detail = jQuery.parseJSON(obj[index]['detail']);
+			var traffic_device = jQuery.parseJSON(obj[index]['traffic_device']);
+console.log(detail[0]['ios'])
+console.log(detail[0]['ios'].substr(detail[0]['ios'].indexOf(',')))
+
+
+			var count = 12;
+			var avgIn = 0;
+			var avgOut= 0;
+			var start = obj.length-12;
+			var label    = [],
+				inbound  = [],
+				outbound = [];
+
+			sendData();
+			function sendData(){
+				if(count > 0){ 
+
+					label.push(obj[start]['time'].substr(0,5));
+					var traffic_device_obj = jQuery.parseJSON(obj[start]['traffic_device'])
+					
+					for(var key in traffic_device_obj){
+
+						if (!(key in inbound)) {
+							inbound[key] = {};
+							inbound[key]['inbound'] = [];
+							inbound[key]['outbound'] = [];
+							inbound[key]['inbound'].push(traffic_device_obj[key]['inbound']);
+							inbound[key]['outbound'].push(traffic_device_obj[key]['outbound']);
+						}else{
+							inbound[key]['inbound'].push(traffic_device_obj[key]['inbound']);
+							inbound[key]['outbound'].push(traffic_device_obj[key]['outbound']);
+						}
+						
+					}
+					
+					start+=1;
+					count-=1;
+					sendData();
+				}
+			}
+
+			    var ios = 'Cisco IOS Catalyst 4500 L3 Switch<br>Software (cat4500e-LANBASEK9-M) Version 15.0(2)SG1<br> Thu 25-Aug-11 09:27';
+				var inbound_chart = inbound['10.77.4.1']['inbound'],
+					outbound_chart = inbound['10.77.4.1']['outbound'];
+				var pathimg = '../img/sw-L3.png',	
+					index_detail = 0,
+					title = 'Internet Traffic (Switch SW4503)';
+				console.log('On click')
+				process(title,inbound_chart,outbound_chart,pathimg,ios,index_detail)
+				chart(inbound_chart,outbound_chart,label)
+
+				$('#name-device').html('<span class="blue-text text-darken-2"><h5>SW4503</h5><h6>'+detail[0]['ip']+'</h6> </span>');
+				$('#ios').html(ios);
+				$('#traff-device').html('<b>Inbound: </b>'+traffic_device['10.77.4.1']['inbound'].toFixed(2)+' Gbps <b>Outbound: </b>'+traffic_device['10.77.4.1']['outbound'].toFixed(2)+' Gbps')
+		
+
+				$('#li-device-SW4503').on('click', function() {
+					var ios = 'Cisco IOS Catalyst 4500 L3 Switch<br>Software (cat4500e-LANBASEK9-M) Version 15.0(2)SG1<br> Thu 25-Aug-11 09:27';
+					var inbound_chart = inbound['10.77.4.1']['inbound'],
+						outbound_chart = inbound['10.77.4.1']['outbound'];
+					var pathimg = '../img/sw-L3.png',	
+						index_detail = 0,
+						title = 'Internet Traffic (Switch SW4503)';
+					console.log('On click')
+					process(title,inbound_chart,outbound_chart,pathimg,ios,index_detail)
+					chart(inbound_chart,outbound_chart,label)
+
+					$('#name-device').html('<span class="blue-text text-darken-2"><h5>SW4503</h5><h6>'+detail[0]['ip']+'</h6> </span>');
+					$('#ios').html(ios);
+					$('#traff-device').html('<b>Inbound: </b>'+traffic_device['10.77.4.1']['inbound'].toFixed(2)+' Gbps <b>Outbound: </b>'+traffic_device['10.77.4.1']['outbound'].toFixed(2)+' Gbps')
+			    });
+
+				$('#li-device-R124').on('click', function() {
+					var ios = 'Cisco IOS C3560  Switch<br>Software (C3560-IPSERVICES-M) Version 12.2(50)SE5<br> Tue 28-Sep-10 13:21';
+					var inbound_chart = inbound['10.77.1.2']['inbound'],
+						outbound_chart = inbound['10.77.1.2']['outbound'];
+					var pathimg = '../img/sw-L2.png',
+						index_detail = 1,
+						title = 'Internet Traffic R124';
+					console.log('On click')
+					process(title,inbound_chart,outbound_chart,pathimg,ios,index_detail)
+					chart(inbound_chart,outbound_chart,label)
+
+					$('#name-device').html('<span class="blue-text text-darken-2"><h5>R124</h5><h6>10.77.1.2 </h6></span>');
+					$('#ios').html(ios);
+					$('#traff-device').html('<b>Inbound: </b>'+traffic_device['10.77.1.2']['inbound'].toFixed(2)+' Gbps <b>Outbound: </b>'+traffic_device['10.77.1.2']['outbound'].toFixed(2)+' Gbps')
+				});
+
+	            $('#li-device-R101C').on('click', function() {
+					var ios = 'Cisco IOS C3560  Switch<br>Software (C3560-IPSERVICES-M) Version 12.2(50)SE5<br> Tue 28-Sep-10 13:21';
+					var inbound_chart = inbound['10.77.6.2']['inbound'],
+						outbound_chart = inbound['10.77.6.2']['outbound'];
+					var pathimg = '../img/sw-L2.png'
+						index_detail = 2,
+						title = 'Internet Traffic R101C';
+					console.log('On click')
+					process(title,inbound_chart,outbound_chart,pathimg,ios,index_detail)
+					chart(inbound_chart,outbound_chart,label)
+
+					$('#name-device').html('<span class="blue-text text-darken-2"><h5>R101C</h5><h6>10.77.6.2</h6> </span>');
+					$('#ios').html(ios);
+					$('#traff-device').html('<b>Inbound: </b>'+traffic_device['10.77.6.2']['inbound'].toFixed(2)+' Gbps <b>Outbound: </b>'+traffic_device['10.77.6.2']['outbound'].toFixed(2)+' Gbps')
+				});
+
+				$('#li-device-R330A').on('click', function() {
+					var ios = 'Cisco IOS C3560  Switch<br>Software (C3560-IPSERVICES-M) Version 12.2(50)SE5<br> Tue 28-Sep-10 13:21';
+					var inbound_chart = inbound['10.77.3.2']['inbound'],
+						outbound_chart = inbound['10.77.3.2']['outbound'];
+					var pathimg = '../img/sw-L2.png',
+						index_detail = 3,
+						title = 'Internet Traffic R330A';
+					console.log('On click')
+					process(title,inbound_chart,outbound_chart,pathimg,ios,index_detail)
+					chart(inbound_chart,outbound_chart,label)
+
+					$('#name-device').html('<span class="blue-text text-darken-2"><h5>R330A</h5><h6>10.77.3.2 </h6></span>');
+					$('#ios').html(ios);
+					$('#traff-device').html('<b>Inbound: </b>'+traffic_device['10.77.3.2']['inbound'].toFixed(2)+' Gbps <b>Outbound: </b>'+traffic_device['10.77.3.2']['outbound'].toFixed(2)+' Gbps')
+				});
+
+				$('#li-device-R415').on('click', function() {
+					var ios = 'Cisco IOS C3560  Switch<br>Software (C3560-IPSERVICES-M) Version 12.2(50)SE5<br> Tue 28-Sep-10 13:21';
+					var inbound_chart = inbound['10.77.5.2']['inbound'],
+						outbound_chart = inbound['10.77.5.2']['outbound'];
+					var pathimg = '../img/sw-L2.png',
+						index_detail = 4,
+						title = 'Internet Traffic R415';
+					console.log('On click')
+					process(title,inbound_chart,outbound_chart,pathimg,ios,index_detail)
+					chart(inbound_chart,outbound_chart,label)
+
+					$('#name-device').html('<span class="blue-text text-darken-2"><h5>R415</h5><h6>10.77.5.2 </h6></span>');		
+					$('#traff-device').html('<b>Inbound: </b>'+traffic_device['10.77.5.2']['inbound'].toFixed(2)+' Gbps <b>Outbound: </b>'+traffic_device['10.77.5.2']['outbound'].toFixed(2)+' Gbps')
+				});
+
+			
+//-----------------------------------Status------------------------------------------	
+			function remove_chart(){	
+				$('#myLineChart').remove()
+			}
+//-----------------------------------Func Calculate------------------------------------------	
+			function process(title,inbound,outbound,path,ios,index){
+				var maxIn  = Math.max.apply(Math, inbound),
+					maxOut = Math.max.apply(Math, outbound),
+				    minIn  = Math.min.apply(Math,  inbound),
+				    minOut = Math.min.apply(Math, outbound),
+				    sumIn  = 0,
+				    sumOut = 0;
+
+				for (var i = 0; i<inbound.length ; i++) {
+					sumIn += inbound[i]
+				}
+				for (var i = 0; i<outbound.length ; i++) {
+					sumOut += outbound[i]
+				}
+				var avgIn = (sumIn/12),
+			   	    avgOut= (sumOut /12),
+			   	    avgIns = avgIn.toFixed(2),
+			   		avgOuts = avgOut.toFixed(2);
+
+				$('#div-in').html("<b>Min :</b>"+minIn.toFixed(2)+'  Gbps.'+"<b>Max :</b>"+maxIn.toFixed(2)+'  Gbps.'+"<b>Average:</b>"+ avgIns+'Gbps.');
+				$('#div-out').html("<b>Min :</b>"+minOut.toFixed(2)+'  Gbps.'+"<b>Max :</b>"+maxOut.toFixed(2)+'  Gbps.'+"<b>Average:</b>"+ avgOuts+'Gbps.');
+				$('#cpu').css({'background':'#387ecf'})
+				$('#mem').css({'background':'#387ecf'})
+				$('#uptime').css({'background':'#387ecf'})
+				$('#temp').css({'background':'#387ecf'})
+				$('#img-device').attr('src',path);
+				$('#ios').html(ios);	
+				$('#cpu-txt').html(detail[index]['cpu']+'%')
+				$('#mem-txt').html(detail[index]['mem'])
+				var end = detail[index]['uptime'].search(",")
+				$('#uptime-txt').html(detail[index]['uptime'].substr(0,end))
+				$('#temp-txt').html(detail[index]['temp']+' F')
+				$('#right-top').show()
+				$('#center').show()
+				$('.panel-title').html(title)
+
+			}		
+//-----------------------------------Chart------------------------------------------
+			function chart(inbound,outbound,label){
+
+					// Data
+					var data_lineChart = {
+					  labels: label,
+					  datasets: [{
+					    label: "My First dataset",
+					    fillColor: "rgba(74,171,237,0.2)",
+					    strokeColor: "rgba(74,171,237,0.1)",
+					    pointColor: "rgba(74,171,237,0.1)",
+					    pointStrokeColor: "#fff",
+					    pointHighlightFill: "#fff",
+					    pointHighlightStroke: "rgba(74,171,237,1)",
+					    data: inbound  
+					  }, {
+					    label: "My Second dataset",
+					    fillColor: "rgba(255,208,208,0.2)",
+					    strokeColor: "rgba(255,208,208,1)",
+					    pointColor: "rgba(255,208,208,1)",
+					    pointStrokeColor: "#fff",
+					    pointHighlightFill: "#fff",
+					    pointHighlightStroke: "rgba(255,208,208,1)",
+					    data: outbound
+					  }]
+					};
+					// Global + Custom Chart Config Options
+					var options = {
+						bezierCurve: true,
+						animation: true,
+						animationEasing: "easeOutQuart",
+						//showScale: false,
+						tooltipEvents: ["mousemove", "touchstart", "touchmove"],
+						tooltipCornerRadius: 3,
+						pointDot : true,
+						pointDotRadius : 4,
+						datasetFill : true,
+						scaleShowLine : true,
+						animationEasing : "easeOutBounce",
+						animateRotate : true,
+						animateScale : true,
+						responsive: true
+					};
+
+
+					// Load Chart
+					
+					var ctx = $("#myLineChart").get(0).getContext("2d");
+					var myLineChart = new Chart(ctx).Line(data_lineChart, options);
+			}
+
+		});
+	</script>
+
+</head>
+<body>
+	<nav>
+		<div class="nav-wrapper  light-blue darken-4">
+		<div class="container">
+	        <a href="#!" class="brand-logo">FITM Monitoring v1.0</a>
+			<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+			<ul class="right hide-on-med-and-down ">
+				<li><a href="dashboard.html">Dashboard</a></li>
+				<li><a href="device.html">Device</a></li>
+				<li><a href="interface.html">Interface</a></li>
+				<li><a href="topranking.html">Top 10 Ranking</a></li>			
+			</ul>
+			<ul class="side-nav" id="mobile-demo">
+				<li><a href="dashboard.html">Dashboard</a></li>
+				<li><a href="device.html">Device</a></li>
+				<li><a href="interface.html">Interface</a></li>
+				<li><a href="topranking.html">Top 10 Ranking</a></li>
+			</ul>
+		</div>
+		</div>
+	</nav>
+
+	<div class="container">
+		<div class="row">
+			<div class="col s12 m12 l12" id="top"></div>
+
+			<div class="col s12 m3 l2" id="left">
+				<ul class="collection">
+					    <a class="collection-item avatar" id="li-device-SW4503">
+							<img src="../img/icon_router.png" alt="" class="circle">
+							<span class="title"><b>SW4503</b></span>
+							<b>10.77.4.1</b>
+						</a>
+						<a class="collection-item avatar" id="li-device-R124">
+							<img src="../img/icon_router.png" alt="" class="circle">
+							<span class="title"><b>R124</b></span><br>
+							<b>10.77.1.2</b>
+						</a>
+						<a class="collection-item avatar" id="li-device-R330A">
+							<img src="../img/icon_router.png" alt="" class="circle">
+							<span class="title"><b>R330A</b></span>
+							<b>10.77.3.2</b>
+						</a>
+						<a class="collection-item avatar" id="li-device-R415">
+							<img src="../img/icon_router.png" alt="" class="circle">
+							<span class="title"><b>R415</b></span><br>
+							 <b>10.44.5.2</b>
+						</a>
+					   	<a class="collection-item avatar" id="li-device-R101C">
+							<img src="../img/icon_router.png" alt="" class="circle">
+							<span class="title"><b>R101C</b></span>
+							<b>10.77.6.2</b>
+					    </a>
+				</ul>
+			</div><!-- left -->
+
+
+			<div class=" col s12 m9 l6" id="center">
+				<div class="card-panel col s12 m10 l12" id="center">
+					<div class="col-xs-4">
+						<div class="panel panel-default">
+
+							<div class="panel-heading">
+								<h4 class="panel-title"><span class="blue-text text-darken-2"></span></h4>
+							</div>
+
+							<canvas id="myLineChart" class="chart"></canvas>
+							<ul class="collection" id="net-traff-txt">
+								<ul class="collection col s4 m3 l2" id="div-all">
+							      	<li class="collection" id="inbound"><center><b>Inbound</b></center></li>
+							        <li class="collection" id="outbound"><center><b>Outbound</b></center></li>
+							    </ul>
+							    <ul class="collection" style="border: 0px">
+							      	<li class="collection-item" id="div-in" style="border: 0px"></li>
+							        <li class="collection-item" id="div-out" style="border: 0px"></li>
+							    </ul>
+						    </ul>
+						</div>
+					</div> 
+				</div>
+			</div><!-- center -->
+
+			<div class=" col s12 m12 l4" id="right-top">
+				<div class="card-panel col s12 m12 l12" id="right-top">
+					<ul class="collection" style="border: 0px"></ul>
+					<img  width="30%"  class="col s12 m12 l4" id="img-device">
+					<ul class="collection" style="border: 0px" id="name-device"></ul>
+
+					<ul class="collection" style="border: 0px">
+					      	<ul class="collection" style="border: 0px" id="ios"></ul>
+					</ul>
+
+				    <ul class="collection" style="border: 0px">
+						<ul class="collection col s12 m9 l3" id="bel"> <!-- label -->
+					      	<li class="collection" id="cpu"><center>
+					      		<b class="grey-text text-lighten-5" id="cpu">CPU</b></center>
+					      	</li>
+					        <li class="collection" id="mem"><center>
+					        	<b class="grey-text text-lighten-5" id="mem">Memory</b></center>
+					        </li>
+					    </ul>
+
+					    <ul class="collection col s12 m9 l3" id="txt"> <!-- text -->
+					      	<li class="collection" style="border: 0px" id="cpu-txt"></li>
+					        <li class="collection" style="border: 0px" id="mem-txt"></li>
+					    </ul>
+
+					    <ul class="collection col s12 m9 l3"  id="bel"> <!-- label -->
+					      	<li class="collection" id="uptime"><center>
+					      		<b class="grey-text text-lighten-5">Uptime</b></center>
+				      		</li>
+					        <li class="collection" id="temp"><center>
+					        	<b class="grey-text text-lighten-5" >temp</b></center>
+				        	</li>
+					    </ul>
+
+					    <ul class="collection col s12 m9 l3" id="txt"> <!-- text -->
+					      	<li class="collection" style="border: 0px"  id="uptime-txt"></li>
+					        <li class="collection" style="border: 0px"  id="temp-txt"></li>
+					    </ul>
+
+					    <ul class="collection col s12 m9 l12" id="traff-device" style="border: 0px"></ul>
+					</ul>
+				</div>
+			</div><!-- right -->
+	
+
+
+
+	  </div><!-- row -->
+	</div><!-- container -->
+
+</body>
+</html>

@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<SnmpSimulatorData>
+<Instances
+>
+<!-- sysDescr.0 -->
+<Instance
+name="sysDescr.0"
+oid=".1.3.6.1.2.1.1.1.0"
+valueType="OctetString"
+>
+<Value><![CDATA[Cisco IOS Software, C3560 Software (C3560-IPSERVICES-M), Version 12.2(50)SE5, RELEASE SOFTWARE (fc1)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2010 by Cisco Systems, Inc.
+Compiled Tue 28-Sep-10 13:21 by prod_rel_team]]></Value>
+</Instance>
+<!-- sysObjectID.0 -->
+<Instance
+name="sysObjectID.0"
+oid=".1.3.6.1.2.1.1.2.0"
+valueType="OID"
+>
+<Value><![CDATA[.1.3.6.1.4.1.9.1.617]]></Value>
+</Instance>
+<!-- sysUpTime.0 -->
+<Instance
+name="sysUpTime.0"
+oid=".1.3.6.1.2.1.1.3.0"
+valueType="TimeTicks"
+>
+<Value><![CDATA[874 hours 54 minutes 46 seconds (314968665)]]></Value>
+</Instance>
+<!-- sysContact.0 -->
+<Instance
+name="sysContact.0"
+oid=".1.3.6.1.2.1.1.4.0"
+valueType="OctetString"
+>
+<Value><![CDATA[]]></Value>
+</Instance>
+<!-- sysName.0 -->
+<Instance
+name="sysName.0"
+oid=".1.3.6.1.2.1.1.5.0"
+valueType="OctetString"
+>
+<Value><![CDATA[R330A]]></Value>
+</Instance>
+<!-- sysLocation.0 -->
+<Instance
+name="sysLocation.0"
+oid=".1.3.6.1.2.1.1.6.0"
+valueType="OctetString"
+>
+<Value><![CDATA[]]></Value>
+</Instance>
+<!-- sysServices.0 -->
+<Instance
+name="sysServices.0"
+oid=".1.3.6.1.2.1.1.7.0"
+valueType="Integer"
+>
+<Value><![CDATA[6]]></Value>
+</Instance>
+</Instances>
+</SnmpSimulatorData>

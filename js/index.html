@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en" ng-app="b">
+<head>
+  <meta charset="UTF-8">
+  <title>Example - example-example8-production</title>
+
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+ <!--  <script src="script.js"></script> -->
+  
+</head>
+<body>
+  <div ng-controller="SpicyController">
+<input type="text" class="form-control" ng-model="name" ng-change="modefied=true" ng-init="modefied=false">
+<a href="#" ng-show="modefied">show</a>
+<br>
+     <button ng-click="chiliSpicy()">1</button>
+     <button ng-click="jalapenoSpicy()">2</button>
+     <p>The click is {{spice}}</p>
+</div>
+
+<script>
+var myApp = angular.module('b', []);
+  myApp.controller('SpicyController',['$scope', function($scope) {
+      $scope.spice = 'click';
+
+      $scope.chiliSpicy = function() {
+          $scope.spice = '1';
+      };
+
+      $scope.jalapenoSpicy = function() {
+          $scope.spice = '2';
+      };
+  }]);
+</script>
+</body>
+</html>
+

@@ -1,0 +1,332 @@
+<html>
+<head>
+	<title>Top 10 Ranking</title>
+	<meta charset="UTF-8">
+	<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<!-- script jquery -->
+	<script src="//code.jquery.com/jquery.min.js"></script>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+	<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<!-- Compiled and minified CSS -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
+	<!--Let browser know website is optimized for mobile-->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
+	<!-- import Chart -->
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/excanvas.js'></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js'></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js'></script>
+	
+	
+
+	<style>
+		html { font-family: GillSans, Calibri, Trebuchet, sans-serif;}  
+		.parallax-container {
+		height: "your height here";	
+	    }
+		.chart{
+		  vertical-align: middle;
+		  width: 100%;
+		  margin: 0 auto; 
+	      position: relative; 
+		  display: inline-block;
+		} 
+		 #top{
+			height: 50px;		
+		}
+		#left{
+			height: 300px;		
+		}
+		#center{
+			position:relative;
+			height: 350px;		
+		}
+		#right-top{
+			position:relative;
+			height: 300px;		
+		}
+		.ilike-blue-container {
+			@extend .blue-text, .text-lighten-4;
+		}
+		.ilike-blue-container {
+			@extend .blue, .lighten-4;
+		}
+		#myLineChart{
+			position:relative;
+			width: 90%;
+			height: 80%;
+		} 
+		.row .col {
+   			 padding: 0 0rem; 
+   		}
+   		body{
+		    background-color: #f5f5f5;
+		}
+
+
+	</style>
+	<script>
+
+		var url ="https://sheetsu.com/apis/v1.0/997a12dcdeda?fields=time,top_ranking";//sheet1
+			function get(){
+			    return $.ajax({ 
+			        type: 'GET', 
+			        url: url,
+			        async: false,
+					success:function(data){
+						console.log('Get Ajax Success')
+					}
+			    });
+			}
+
+			var data  = get();
+			var objs  = jQuery.parseJSON(data['responseText']);
+			var obj = jQuery.parseJSON(objs[(objs.length-2)]['top_ranking']);
+
+//-----------------------------------Document-------------------------------------------	
+		$(document).ready(function(){
+			$('.parallax').parallax();
+			$('.collapsible').collapsible({
+				accordion : false 
+			});
+			$('.button-collapse').sideNav({
+				menuWidth: 500, 
+				edge: 'right',
+				closeOnClick: true 
+			});  
+			$('.carousel').carousel();
+
+			var list = [],top = [],arr = [],top_new=[],inbound=[],outbound=[];
+			for(var host in obj){	
+				for(var vlan in obj[host]['inbound']){
+					if(obj[host]['inbound'][vlan].search(",") == 1 ){
+						//console.log(obj[host]['inbound'][vlan],obj[host]['inbound'][vlan].indexOf(","))
+						var txtin1 = obj[host]['inbound'][vlan].substr(0,obj[host]['inbound'][vlan].indexOf(","))
+						var txtin2 = obj[host]['inbound'][vlan].substr(obj[host]['inbound'][vlan].indexOf(",")+1,obj[host]['inbound'][vlan].length)
+						
+						obj[host]['inbound'][vlan] = txtin1+txtin2
+						
+						console.log(obj[host]['inbound'][vlan],obj[host]['outbound'][vlan])
+					}
+					if(obj[host]['outbound'][vlan].search(",") == 1 ){
+						var txtout1 = obj[host]['outbound'][vlan].substr(0,obj[host]['outbound'][vlan].indexOf(","))
+						var txtout2 = obj[host]['outbound'][vlan].substr(obj[host]['outbound'][vlan].indexOf(",")+1,obj[host]['outbound'][vlan].length)
+							
+							obj[host]['outbound'][vlan] = txtout1+txtout2
+					}
+					//console.log('val',host,vlan,obj[host]['inbound'][vlan].search(","),obj[host]['outbound'][vlan].search(","))
+					inbound[vlan]  =  parseFloat(obj[host]['inbound'][vlan])
+					outbound[vlan] = parseFloat(obj[host]['outbound'][vlan])
+					arr[vlan] = parseFloat(obj[host]['inbound'][vlan])+parseFloat(obj[host]['outbound'][vlan])
+					list.push(parseFloat(obj[host]['inbound'][vlan])+parseFloat(obj[host]['outbound'][vlan]))
+				}	
+			}
+			console.log('inbound',inbound)
+			console.log('outbound',outbound)
+//-----------------------------------swap array-------------------------------------------
+			var length = list.length
+			for(var i=0; i<length; i++){
+				var value = Math.max.apply(Math,list);	
+				top.push(value)
+				list = list.filter(function(item) { 
+			    	return item !== value;
+				})
+			}
+			var c = 0,label = [],data_in=[],data_out=[];
+		
+			fide()
+			function fide(){
+				for(var key in arr){
+					var int = top.indexOf(arr[key]);
+					//console.log(key,top.indexOf(arr[key]))
+					if(top.indexOf(arr[key]) == c ){
+						top_new[key] = top[int]
+
+						if(c<10){
+							var tr = $('<tr></tr>'),
+								td_no = $('<td></td>'),
+								td_vlan = $('<td></td>')
+								td_netid = $('<td></td>')
+								td_in = $('<td></td>'),
+								td_out = $('<td></td>');
+							var no = c;
+							var bel = key.search(" ")
+
+							label.push(key.substr(0,bel))
+							data_in.push(inbound[key])
+							data_out.push(outbound[key])
+							//-------------------------
+							tr.attr('id',no)
+							td_no.html(no+1)
+							td_vlan.html(key.substr(0,bel))
+							td_netid.html(key.substr(bel,key.length))
+							td_in.html(inbound[key]+' Mbps')
+							td_out.html(outbound[key]+' Mbps')
+							tr.append(td_no,td_vlan,td_netid,td_in,td_out)
+							$('#data').append(tr)
+						}					
+						c+=1
+						fide()
+					}
+				}
+			}
+//-----------------------------------Create table-------------------------------------------
+			
+
+		console.log('top',top_new)
+		console.log('top-In',data_in)
+		console.log('top-Out',data_out)
+		var ctx = document.getElementById("myLineChart");
+		var data = {
+			labels: label,
+			datasets: [
+			{
+			label: "Inbound",
+			backgroundColor: [
+			'rgba(54, 162, 235, 0.2)',
+			'rgba(54, 162, 235, 0.2)',
+			'rgba(54, 162, 235, 0.2)',
+			'rgba(54, 162, 235, 0.2)',
+			'rgba(54, 162, 235, 0.2)',
+			'rgba(54, 162, 235, 0.2)',
+			'rgba(54, 162, 235, 0.2)',
+			'rgba(54, 162, 235, 0.2)',
+			'rgba(54, 162, 235, 0.2)',
+			'rgba(54, 162, 235, 0.2)',
+			'rgba(54, 162, 235, 0.2)',
+			'rgba(54, 162, 235, 0.2)'
+			],
+			borderColor: [
+			'rgba(54, 162, 235, 1)',
+			'rgba(54, 162, 235, 1)',
+			'rgba(54, 162, 235, 1)',
+			'rgba(54, 162, 235, 1)',
+			'rgba(54, 162, 235, 1)',
+			'rgba(54, 162, 235, 1)',
+			'rgba(54, 162, 235, 1)',
+			'rgba(54, 162, 235, 1)',
+			'rgba(54, 162, 235, 1)',
+			'rgba(54, 162, 235, 1)',
+			'rgba(54, 162, 235, 1)',
+			'rgba(54, 162, 235, 1)'
+			],
+			borderWidth: 1,
+			data: data_in
+			},
+			{
+			label: "Outbound",
+			backgroundColor: [
+			'rgba(255, 99, 132, 0.2)',
+			'rgba(255, 99, 132, 0.2)',
+			'rgba(255, 99, 132, 0.2)',
+			'rgba(255, 99, 132, 0.2)',
+			'rgba(255, 99, 132, 0.2)',
+			'rgba(255, 99, 132, 0.2)',
+			'rgba(255, 99, 132, 0.2)',
+			'rgba(255, 99, 132, 0.2)',
+			'rgba(255, 99, 132, 0.2)',
+			'rgba(255, 99, 132, 0.2)',
+			'rgba(255, 99, 132, 0.2)',
+			'rgba(255, 99, 132, 0.2)'
+			],
+			borderColor: [
+			'rgba(255,99,132,1)',
+			'rgba(255,99,132,1)',
+			'rgba(255,99,132,1)',
+			'rgba(255,99,132,1)',
+			'rgba(255,99,132,1)',
+			'rgba(255,99,132,1)',
+			'rgba(255,99,132,1)',
+			'rgba(255,99,132,1)',
+			'rgba(255,99,132,1)',
+			'rgba(255,99,132,1)',
+			'rgba(255,99,132,1)',
+			'rgba(255,99,132,1)'
+			],
+			borderWidth: 1,
+			data: data_out
+			}
+			]
+		}//data
+		var myLineChart = new Chart(ctx, {
+			type: 'bar',
+			data: data
+		});
+		});
+	</script>
+
+</head>
+<body>
+	<nav>
+		<div class="nav-wrapper  light-blue darken-4">
+		<div class="container">
+	        <a href="#!" class="brand-logo">FITM Monitoring v1.0</a>
+			<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+			<ul class="right hide-on-med-and-down ">
+				<li><a href="dashboard.html">Dashboard</a></li>
+				<li><a href="device.html">Device</a></li>
+				<li><a href="interface.html">Interface</a></li>
+				<li><a href="top_ranking.html">Top 10 Ranking</a></li>
+				<!-- <li><a href="event.html">Event</a></li>
+				<li><a href="network.html">Network</a></li> -->
+				
+			</ul>
+			<ul class="side-nav" id="mobile-demo">
+				<li><a href="dashboard.html">Dashboard</a></li>
+				<li><a href="device.html">Device</a></li>
+				<li><a href="interface.html">Interface</a></li>
+				<li><a href="top_ranking.html">Top 10 Ranking</a></li>
+			<!-- 	<li><a href="event.html">Event</a></li>
+			<li><a href="network.html">Network</a></li>	 -->
+			</ul>
+		</div>
+		</div>
+	</nav>
+
+	<div class="container">
+		<div class="row">
+			<div class="col s12 m12 l12" id="top"></div>
+
+			<div class="col s12 m3 l2" id="left">
+				<!-- <div class="card-panel col s12 m8 l12" id="right-top"></div> -->
+			</div><!-- left -->
+
+
+			<div class=" col s12 m9 l8" id="center">
+				<div class="card-panel col s12 m10 l12" id="center">
+					 <canvas id="myLineChart" width="400"></canvas>
+				</div>
+			</div><!-- center -->
+
+			<div class=" col s12 m8 l2" id="right-top">
+				<!-- <div class="card-panel col s12 m8 l12" id="right-top"></div>	 -->
+			</div>
+	  </div><!-- row -->
+
+	<div class="row col s12 m8 l12">
+		<div class="col s12 m3 l2" id="left"></div>	
+		
+		<div class="card-panel col s12 m10 l8">
+			<table class="highlight">
+				<thead>
+					<tr>
+					<th data-field="no">No.</th>
+					<th data-field="vlan">Vlan Name</th>
+					<th data-field="network">Network ID</th>
+					<th data-field="inbound">Inbound</th>
+					<th data-field="outbound">Outbound</th>
+					</tr>
+				</thead>
+				<tbody id="data">
+					
+				</tbody>
+			</table>
+		</div>
+		
+		<div class="col s12 m8 l2" id="right-top"></div>
+			
+	</div><!-- container -->
+
+</body>
+</html>

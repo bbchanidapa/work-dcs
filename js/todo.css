@@ -1,0 +1,9 @@
+.done-true { /*  ชื่อ class สำหรับรายการที่ถูกติ้กเลือก */  
+  text-decoration: line-through; /*  แสดงเส้นขีดฆ่า */  
+  color: grey;  /* แสดงเป็นสีเทา */  
+}  
+ul.unstyled{ /*  ชื่อ class สำหรับรายการ แสดงลิสรายการ  */  
+margin: 0;  
+padding:5px;  
+list-style: none;  
+}  
